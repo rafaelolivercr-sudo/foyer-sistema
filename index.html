@@ -926,6 +926,430 @@
       display: inline-block;
     }
 
+    .users-hero {
+      display: grid;
+      gap: 22px;
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+    }
+
+    .users-hero-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .users-hero-header h2 {
+      margin: 0;
+      font-size: 2.4rem;
+      color: var(--text);
+    }
+
+    .users-hero-header p {
+      margin: 6px 0 0;
+      color: var(--text-muted);
+    }
+
+    .user-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .user-actions .btn-primary,
+    .user-actions .btn-secondary {
+      min-width: 180px;
+    }
+
+    .users-filters {
+      display: grid;
+      gap: 16px;
+    }
+
+    .users-search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .users-search input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .users-filter-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .users-filter-row select {
+      width: 100%;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 0.95rem;
+      appearance: none;
+    }
+
+    .users-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .user-stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 22px 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .user-stat-card strong {
+      font-size: 2rem;
+      color: var(--gold);
+    }
+
+    .user-list-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .user-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+      min-height: 320px;
+    }
+
+    .user-card header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .user-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(184,144,42,0.16);
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .user-meta {
+      display: grid;
+      gap: 6px;
+    }
+
+    .user-meta h3 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .user-badge.gold {
+      background: rgba(184,144,42,0.18);
+      color: var(--gold);
+      border-color: rgba(184,144,42,0.28);
+    }
+
+    .user-detail-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .user-detail-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .user-detail-block {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      gap: 8px;
+    }
+
+    .user-detail-block span {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .user-detail-block strong {
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .user-card footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .user-card footer .action-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .user-card footer button {
+      min-width: 88px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+    }
+
+    .user-card footer .btn-edit {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+
+    .user-card footer .btn-delete {
+      background: rgba(255,0,0,0.12);
+      border: 1px solid rgba(255,0,0,0.16);
+      color: #ff7f7f;
+    }
+
+    .user-card footer .btn-toggle {
+      background: rgba(0,255,0,0.1);
+      border: 1px solid rgba(0,255,0,0.16);
+      color: #b6f5a3;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.68);
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.hidden {
+      display: none;
+    }
+
+    .modal-panel {
+      width: min(780px, 100%);
+      max-height: calc(100vh - 64px);
+      overflow: hidden;
+      display: grid;
+      gap: 18px;
+      border-radius: 28px;
+      background: rgba(7, 26, 53, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.45);
+      padding: 28px 28px 22px;
+    }
+
+    .modal-panel header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .modal-panel header h3 {
+      margin: 0;
+      font-size: 1.75rem;
+      letter-spacing: 0.02em;
+    }
+
+    .modal-panel header p {
+      margin: 8px 0 0;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .modal-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    .form-field {
+      display: grid;
+      gap: 10px;
+    }
+
+    .form-field label {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-field input::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .form-section {
+      padding: 20px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-section h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: 0.16em;
+    }
+
+    .pix-type-group {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pix-type-button {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .pix-type-button.active {
+      background: rgba(184, 144, 42, 0.18);
+      border-color: rgba(184, 144, 42, 0.36);
+      color: var(--gold);
+    }
+
+    .field-error label,
+    .field-error input,
+    .field-error select {
+      color: #ff8080;
+      border-color: #ff8080;
+    }
+
+    .field-error input,
+    .field-error select {
+      box-shadow: 0 0 0 3px rgba(255, 128, 128, 0.08);
+    }
+
+    .error-message {
+      font-size: 0.78rem;
+      color: #ff9a9a;
+      margin-top: -4px;
+      line-height: 1.3;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .modal-actions button {
+      min-width: 140px;
+    }
+
+    @media (max-width: 1120px) {
+      .users-stats-grid,
+      .user-detail-row,
+      .users-filter-row,
+      .user-list-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .summary-board {
       display: grid;
       gap: 18px;
@@ -1465,27 +1889,200 @@
           </div>
 
           <div id="section-usuarios" class="dashboard-section">
-            <div class="dashboard-card small">
-              <h2>Usuários</h2>
-              <div class="metric-detail">Gestão de contas, permissões e acesso.</div>
-            </div>
-            <div class="dashboard-grid">
-              <div class="dashboard-card">
-                <h2>Usuários ativos</h2>
-                <div class="metric-value">12</div>
-                <div class="metric-detail">Acessaram o sistema nas últimas 24h.</div>
+            <div class="dashboard-card users-hero">
+              <div class="users-hero-header">
+                <div>
+                  <h2>Usuários</h2>
+                  <p>Usuários do sistema</p>
+                </div>
+                <div class="user-actions">
+                  <button id="invite-user" class="btn-secondary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Convidar usuário</button>
+                  <button id="add-user" class="btn-primary"><i class="fa-solid fa-plus"></i> Novo usuário</button>
+                </div>
               </div>
-              <div class="dashboard-card">
-                <h2>Novos cadastros</h2>
-                <div class="metric-value">3</div>
-                <div class="metric-detail">Contas criadas nos últimos 7 dias.</div>
+
+              <div class="users-filters">
+                <div class="users-search">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input id="user-search" type="text" placeholder="Buscar por nome, e-mail ou equipe...">
+                </div>
+                <div class="users-filter-row">
+                  <select id="filter-profile">
+                    <option>Todos os perfis</option>
+                    <option>Diretor</option>
+                    <option>Gerente</option>
+                    <option>RH</option>
+                  </select>
+                  <select id="filter-status">
+                    <option>Todos os status</option>
+                    <option>Ativo</option>
+                    <option>Pendente</option>
+                    <option>Inativo</option>
+                  </select>
+                  <select id="filter-unit">
+                    <option>Todas as unidades</option>
+                    <option>Centro</option>
+                    <option>Cristo Rei</option>
+                  </select>
+                  <select id="filter-team">
+                    <option>Todas as equipes</option>
+                    <option>Tigers</option>
+                    <option>Schwank</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="users-stats-grid">
+                <div class="user-stat-card">
+                  <span class="panel-label">Total cadastrados</span>
+                  <strong id="stat-total">166</strong>
+                </div>
+                <div class="user-stat-card">
+                  <span class="panel-label">Ativos</span>
+                  <strong id="stat-active">77</strong>
+                </div>
+                <div class="user-stat-card">
+                  <span class="panel-label">Pendentes</span>
+                  <strong id="stat-pending">5</strong>
+                </div>
+                <div class="user-stat-card">
+                  <span class="panel-label">Inativos</span>
+                  <strong id="stat-inactive">84</strong>
+                </div>
+                <div class="user-stat-card">
+                  <span class="panel-label">Mostrando</span>
+                  <strong id="stat-showing">166</strong>
+                </div>
               </div>
             </div>
+
+            <div id="user-list" class="dashboard-grid user-list-grid"></div>
           </div>
         </div>
       </section>
     </div>
   </main>
+
+  <div id="user-modal-backdrop" class="modal-backdrop hidden" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+      <header>
+        <div>
+          <h3 id="user-modal-title">Novo Usuário</h3>
+          <p>Preencha todos os campos obrigatórios para cadastrar um novo colaborador no sistema.</p>
+        </div>
+        <button id="close-user-modal" class="modal-close" type="button" aria-label="Fechar modal"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+
+      <form id="user-add-form" class="form-grid">
+        <div class="form-section">
+          <h4>Dados pessoais</h4>
+          <div class="form-row full">
+            <div class="form-field">
+              <label for="new-user-name">Nome completo *</label>
+              <input id="new-user-name" name="name" type="text" placeholder="Ex: João da Silva Santos" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="new-user-email">E-mail *</label>
+              <input id="new-user-email" name="email" type="email" placeholder="joao@company.com.br" required>
+            </div>
+            <div class="form-field">
+              <label for="new-user-phone">Telefone / WhatsApp *</label>
+              <input id="new-user-phone" name="phone" type="text" placeholder="(41) 99999-9999" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="new-user-profile">Perfil de acesso *</label>
+              <select id="new-user-profile" name="profile" required>
+                <option value="">Selecione...</option>
+                <option>Diretor</option>
+                <option>Gerente</option>
+                <option>RH</option>
+                <option>Atendimento</option>
+                <option>Comercial</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="new-user-status">Status *</label>
+              <select id="new-user-status" name="status" required>
+                <option value="">Selecione...</option>
+                <option>Ativo</option>
+                <option>Pendente</option>
+                <option>Inativo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="new-user-unit">Unidade *</label>
+              <select id="new-user-unit" name="unit" required>
+                <option value="">Selecione...</option>
+                <option>Centro</option>
+                <option>Cristo Rei</option>
+                <option>Água Verde</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="new-user-team">Equipe</label>
+              <input id="new-user-team" name="team" type="text" placeholder="Ex: Equipe Fênix, Equipe Alpha...">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Dados bancários</h4>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="new-user-bank">Banco *</label>
+              <input id="new-user-bank" name="bank" type="text" placeholder="Ex: Nubank, Itaú, Bradesco" required>
+            </div>
+            <div class="form-field">
+              <label for="new-user-agency">Agência</label>
+              <input id="new-user-agency" name="agency" type="text" placeholder="Ex: 0001">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="new-user-account">Conta *</label>
+              <input id="new-user-account" name="account" type="text" placeholder="Ex: 12345-6" required>
+            </div>
+            <div class="form-field">
+              <label for="new-user-account-type">Tipo de conta *</label>
+              <select id="new-user-account-type" name="accountType" required>
+                <option value="">Selecione...</option>
+                <option>Corrente</option>
+                <option>Poupança</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Chave Pix</h4>
+          <div class="pix-type-group" role="group" aria-label="Tipo de chave Pix">
+            <button type="button" class="pix-type-button active" data-pix-type="CPF">CPF</button>
+            <button type="button" class="pix-type-button" data-pix-type="CNPJ">CNPJ</button>
+            <button type="button" class="pix-type-button" data-pix-type="E-mail">E-mail</button>
+            <button type="button" class="pix-type-button" data-pix-type="Telefone">Telefone</button>
+            <button type="button" class="pix-type-button" data-pix-type="Chave Aleatória">Chave Aleatória</button>
+          </div>
+          <div class="form-row full">
+            <div class="form-field">
+              <label for="new-user-pix">Chave Pix *</label>
+              <input id="new-user-pix" name="pixKey" type="text" placeholder="Digite a chave pix..." required>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancel-user-btn">Cancelar</button>
+          <button type="submit" class="btn-primary">Cadastrar usuário</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
     function setAuthState(isAuthed) {
@@ -1560,6 +2157,265 @@
         }
       });
     });
+
+    function createUserCard(user) {
+      return `
+        <article class="user-card">
+          <header>
+            <div class="user-avatar">${user.initials}</div>
+            <div class="user-meta">
+              <h3>${user.name}</h3>
+              <div class="tag-row">
+                <span class="user-badge gold">${user.profile}</span>
+                <span class="user-badge">${user.status}</span>
+              </div>
+            </div>
+          </header>
+          <div class="user-detail-grid">
+            <div class="user-detail-block">
+              <span>E-mail</span>
+              <strong>${user.email}</strong>
+            </div>
+            <div class="user-detail-block">
+              <span>Telefone</span>
+              <strong>${user.phone}</strong>
+            </div>
+            <div class="user-detail-row">
+              <div class="user-detail-block">
+                <span>Unidade</span>
+                <strong>${user.unit}</strong>
+              </div>
+              <div class="user-detail-block">
+                <span>Equipe</span>
+                <strong>${user.team || '—'}</strong>
+              </div>
+            </div>
+            <div class="user-detail-row">
+              <div class="user-detail-block">
+                <span>Banco</span>
+                <strong>${user.bank}</strong>
+              </div>
+              <div class="user-detail-block">
+                <span>Conta</span>
+                <strong>${user.account} • ${user.accountType}</strong>
+              </div>
+            </div>
+            <div class="user-detail-block">
+              <span>Chave Pix</span>
+              <strong>${user.pixType} • ${user.pixKey}</strong>
+            </div>
+          </div>
+          <footer>
+            <div class="action-group">
+              <button class="btn-edit" type="button">Editar</button>
+              <button class="btn-delete" type="button">Excluir</button>
+            </div>
+            <button class="btn-toggle" type="button">Ver perfil</button>
+          </footer>
+        </article>
+      `;
+    }
+
+    var users = [
+      {
+        name: 'Giovana Albuquerque',
+        email: 'giovana@foyerimov.com.br',
+        phone: '(41) 9999-9943',
+        profile: 'Gerente',
+        status: 'Ativo',
+        unit: 'Centro',
+        team: 'Equipe Schwank',
+        bank: 'Nubank',
+        account: '12345-6',
+        accountType: 'Corrente',
+        pixType: 'CPF',
+        pixKey: '123.456.789-00',
+        initials: 'GA'
+      },
+      {
+        name: 'Rafael Moura',
+        email: 'rafael.moura@foyer.com.br',
+        phone: '(41) 98888-7777',
+        profile: 'RH',
+        status: 'Pendente',
+        unit: 'Cristo Rei',
+        team: 'Equipe Fênix',
+        bank: 'Itaú',
+        account: '98765-4',
+        accountType: 'Poupança',
+        pixType: 'E-mail',
+        pixKey: 'rafael@foyer.com.br',
+        initials: 'RM'
+      }
+    ];
+
+    function updateUserCards() {
+      var userList = document.getElementById('user-list');
+      userList.innerHTML = users.map(createUserCard).join('');
+      document.getElementById('stat-total').textContent = users.length;
+      document.getElementById('stat-active').textContent = users.filter(function(user) { return user.status === 'Ativo'; }).length;
+      document.getElementById('stat-pending').textContent = users.filter(function(user) { return user.status === 'Pendente'; }).length;
+      document.getElementById('stat-inactive').textContent = users.filter(function(user) { return user.status === 'Inativo'; }).length;
+      document.getElementById('stat-showing').textContent = users.length;
+    }
+
+    function openUserModal() {
+      document.getElementById('user-modal-backdrop').classList.remove('hidden');
+      document.getElementById('user-modal-backdrop').setAttribute('aria-hidden', 'false');
+      document.getElementById('new-user-name').focus();
+    }
+
+    function closeUserModal() {
+      document.getElementById('user-modal-backdrop').classList.add('hidden');
+      document.getElementById('user-modal-backdrop').setAttribute('aria-hidden', 'true');
+    }
+
+    function resetUserForm() {
+      var form = document.getElementById('user-add-form');
+      form.reset();
+      document.querySelectorAll('.pix-type-button').forEach(function(button) {
+        button.classList.toggle('active', button.dataset.pixType === 'CPF');
+      });
+    }
+
+    function normalizeInitials(name) {
+      return name.split(' ').filter(Boolean).map(function(part) { return part[0]; }).slice(0,2).join('').toUpperCase();
+    }
+
+    document.getElementById('add-user').addEventListener('click', function() {
+      resetUserForm();
+      openUserModal();
+    });
+
+    document.getElementById('invite-user').addEventListener('click', function() {
+      var inviteEmail = window.prompt('Digite o e-mail do usuário a ser convidado:');
+      if (!inviteEmail) {
+        return;
+      }
+      var email = inviteEmail.trim();
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        window.alert('Por favor, informe um e-mail válido para enviar o convite.');
+        return;
+      }
+      var newUser = {
+        name: 'Convite enviado',
+        email: email,
+        phone: '—',
+        profile: 'Colaborador',
+        status: 'Pendente',
+        unit: 'Centro',
+        team: '—',
+        bank: '—',
+        account: '—',
+        accountType: '—',
+        pixType: 'E-mail',
+        pixKey: email,
+        initials: email.slice(0, 2).toUpperCase()
+      };
+      users.unshift(newUser);
+      updateUserCards();
+      window.alert('Convite enviado para ' + email + '. Usuário adicionado como pendente.');
+    });
+
+    document.getElementById('close-user-modal').addEventListener('click', closeUserModal);
+    document.getElementById('cancel-user-btn').addEventListener('click', closeUserModal);
+    document.getElementById('user-modal-backdrop').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeUserModal();
+      }
+    });
+
+    function clearValidationErrors() {
+      document.querySelectorAll('.field-error').forEach(function(item) {
+        item.classList.remove('field-error');
+      });
+      document.querySelectorAll('.error-message').forEach(function(msg) {
+        msg.remove();
+      });
+    }
+
+    function showValidationError(field, message) {
+      var container = field.closest('.form-field');
+      if (!container) return;
+      container.classList.add('field-error');
+      if (!container.querySelector('.error-message')) {
+        var errorText = document.createElement('div');
+        errorText.className = 'error-message';
+        errorText.textContent = message;
+        container.appendChild(errorText);
+      }
+    }
+
+    function validateUserForm() {
+      clearValidationErrors();
+      var form = document.getElementById('user-add-form');
+      var valid = true;
+      var requiredFields = Array.from(form.querySelectorAll('[required]'));
+      requiredFields.forEach(function(field) {
+        if (!field.value.trim()) {
+          valid = false;
+          showValidationError(field, 'Este campo é obrigatório.');
+        }
+      });
+      var emailField = document.getElementById('new-user-email');
+      if (emailField.value.trim() && !/^\S+@\S+\.\S+$/.test(emailField.value.trim())) {
+        valid = false;
+        showValidationError(emailField, 'Informe um e-mail válido.');
+      }
+      return valid;
+    }
+
+    document.querySelectorAll('.form-field input, .form-field select').forEach(function(field) {
+      field.addEventListener('input', function() {
+        if (field.closest('.form-field').classList.contains('field-error')) {
+          field.closest('.form-field').classList.remove('field-error');
+          var error = field.closest('.form-field').querySelector('.error-message');
+          if (error) {
+            error.remove();
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.pix-type-button').forEach(function(button) {
+      button.addEventListener('click', function() {
+        document.querySelectorAll('.pix-type-button').forEach(function(other) {
+          other.classList.remove('active');
+        });
+        button.classList.add('active');
+        document.getElementById('new-user-pix').placeholder = 'Digite a chave ' + button.dataset.pixType.toLowerCase() + '...';
+      });
+    });
+
+    document.getElementById('user-add-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (!validateUserForm()) {
+        return;
+      }
+
+      var user = {
+        name: document.getElementById('new-user-name').value.trim(),
+        email: document.getElementById('new-user-email').value.trim(),
+        phone: document.getElementById('new-user-phone').value.trim(),
+        profile: document.getElementById('new-user-profile').value || 'Colaborador',
+        status: document.getElementById('new-user-status').value || 'Ativo',
+        unit: document.getElementById('new-user-unit').value || 'Centro',
+        team: document.getElementById('new-user-team').value.trim(),
+        bank: document.getElementById('new-user-bank').value.trim(),
+        agency: document.getElementById('new-user-agency').value.trim(),
+        account: document.getElementById('new-user-account').value.trim(),
+        accountType: document.getElementById('new-user-account-type').value || 'Corrente',
+        pixType: document.querySelector('.pix-type-button.active').dataset.pixType,
+        pixKey: document.getElementById('new-user-pix').value.trim(),
+      };
+      user.initials = normalizeInitials(user.name);
+      users.unshift(user);
+      updateUserCards();
+      closeUserModal();
+      window.alert('Usuário cadastrado com sucesso!');
+    });
+
+    updateUserCards();
 
     if (isAuthed()) {
       showDashboard();
