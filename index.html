@@ -1868,6 +1868,18 @@
                 <div class="metric-detail">Vendas registradas este mês.</div>
               </div>
             </div>
+            <div class="dashboard-card users-hero" style="margin-top:12px;">
+              <div class="users-hero-header">
+                <div>
+                  <h3>Registro de Vendas</h3>
+                  <p>Cadastre e gerencie vendas aqui.</p>
+                </div>
+                <div class="user-actions">
+                  <button id="add-sale" class="btn-primary"><i class="fa-solid fa-plus"></i> Nova venda</button>
+                </div>
+              </div>
+              <div id="sales-list" style="margin-top:12px;"></div>
+            </div>
           </div>
 
           <div id="section-treinamentos" class="dashboard-section">
@@ -2248,6 +2260,65 @@
     </div>
   </div>
 
+  <div id="sale-modal-backdrop" class="modal-backdrop hidden" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="sale-modal-title">
+      <header>
+        <div>
+          <h3 id="sale-modal-title">Nova Venda</h3>
+          <p>Registre uma nova venda ou edite uma existente.</p>
+        </div>
+        <button id="close-sale-modal" class="modal-close" type="button" aria-label="Fechar modal"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+
+      <form id="sale-form" class="form-grid">
+        <div class="form-section">
+          <h4>Detalhes da Venda</h4>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="sale-buyer">Comprador *</label>
+              <input id="sale-buyer" name="buyer" type="text" placeholder="Nome do comprador" required>
+            </div>
+            <div class="form-field">
+              <label for="sale-seller">Corretor *</label>
+              <select id="sale-seller" name="seller" required>
+                <option value="">Selecione corretor...</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="sale-value">Valor (R$) *</label>
+              <input id="sale-value" name="value" type="number" step="0.01" placeholder="Valor da venda" required>
+            </div>
+            <div class="form-field">
+              <label for="sale-date">Data *</label>
+              <input id="sale-date" name="date" type="date" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="sale-status">Status</label>
+              <select id="sale-status" name="status">
+                <option>Concluída</option>
+                <option>Em negociação</option>
+                <option>Perdida</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="sale-commission">Comissão (%)</label>
+              <input id="sale-commission" name="commission" type="number" step="0.1" placeholder="Percentual de comissão">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancel-sale-btn">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar venda</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     function setAuthState(isAuthed) {
       if (isAuthed) {
@@ -2584,6 +2655,146 @@
     document.getElementById('close-profile-modal').addEventListener('click', closeProfileModal);
     document.getElementById('close-profile-btn').addEventListener('click', closeProfileModal);
     document.getElementById('profile-modal-backdrop').addEventListener('click', function(e) { if (e.target === this) closeProfileModal(); });
+
+    // Wire up user action buttons
+    var addUserBtn = document.getElementById('add-user');
+    if (addUserBtn) addUserBtn.addEventListener('click', function() { resetUserForm(); openUserModal(); });
+    var inviteBtn = document.getElementById('invite-user');
+    if (inviteBtn) inviteBtn.addEventListener('click', function() {
+      var email = prompt('Informe o e-mail para envio do convite:');
+      if (!email) return;
+      if (!/^\S+@\S+\.\S+$/.test(email.trim())) { alert('E-mail inválido.'); return; }
+      var pending = { name: '', email: email.trim(), phone: '', profile: 'Colaborador', status: 'Pendente', unit: '', team: '', initials: normalizeInitials(email.trim()) };
+      users.unshift(pending);
+      saveUIState();
+      updateUserCards();
+      alert('Convite simulado: usuário adicionado como pendente.');
+    });
+
+    // --- Sales data and UI ---
+    var sales = [];
+    var editSaleIndex = null;
+
+    function loadSales() {
+      try {
+        var s = JSON.parse(localStorage.getItem('foyer_sales') || '[]');
+        if (Array.isArray(s)) sales = s;
+      } catch (e) { sales = []; }
+    }
+
+    function saveSales() {
+      localStorage.setItem('foyer_sales', JSON.stringify(sales));
+    }
+
+    function formatCurrency(v) { return 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+    function createSaleCard(sale, idx) {
+      return `
+        <article class="user-card" data-sale-idx="${idx}">
+          <header>
+            <div class="user-avatar">${(sale.seller||'--').slice(0,1)}</div>
+            <div class="user-meta">
+              <h3>${sale.buyer} <small style="font-weight:400">(${sale.status||'—'})</small></h3>
+              <div class="tag-row"><span class="user-badge">${sale.seller||'—'}</span><span class="user-badge">${formatCurrency(sale.value)}</span></div>
+            </div>
+          </header>
+          <div class="user-detail-grid">
+            <div class="user-detail-block"><span>Data</span><strong>${sale.date || '—'}</strong></div>
+            <div class="user-detail-block"><span>Comissão</span><strong>${sale.commission ? sale.commission + '%' : '—'}</strong></div>
+          </div>
+          <div style="margin-top:8px;text-align:right">
+            <button class="btn-secondary btn-edit-sale" data-idx="${idx}">Editar</button>
+            <button class="btn-secondary btn-delete-sale" data-idx="${idx}">Excluir</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderSalesList() {
+      var container = document.getElementById('sales-list');
+      if (!container) return;
+      if (!sales.length) {
+        container.innerHTML = '<div class="metric-detail">Nenhuma venda registrada.</div>';
+        return;
+      }
+      container.innerHTML = sales.map(function(s,i){ return createSaleCard(s,i); }).join('');
+
+      // attach handlers
+      document.querySelectorAll('.btn-edit-sale').forEach(function(btn){ btn.addEventListener('click', function(){ openSaleModal(parseInt(btn.dataset.idx,10)); }); });
+      document.querySelectorAll('.btn-delete-sale').forEach(function(btn){ btn.addEventListener('click', function(){ var i = parseInt(btn.dataset.idx,10); if (confirm('Excluir venda?')) { sales.splice(i,1); saveSales(); renderSalesList(); } }); });
+    }
+
+    function populateSellerOptions() {
+      var sel = document.getElementById('sale-seller');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">Selecione corretor...</option>' + users.map(function(u){ return '<option>'+ (u.name || u.email || '—') +'</option>'; }).join('');
+    }
+
+    function resetSaleForm() {
+      var form = document.getElementById('sale-form');
+      form.reset();
+      editSaleIndex = null;
+    }
+
+    function openSaleModal(idx) {
+      populateSellerOptions();
+      if (typeof idx === 'number') {
+        var s = sales[idx]; if (!s) return;
+        editSaleIndex = idx;
+        document.getElementById('sale-buyer').value = s.buyer || '';
+        document.getElementById('sale-seller').value = s.seller || '';
+        document.getElementById('sale-value').value = s.value || '';
+        document.getElementById('sale-date').value = s.date || '';
+        document.getElementById('sale-status').value = s.status || 'Concluída';
+        document.getElementById('sale-commission').value = s.commission || '';
+      } else {
+        resetSaleForm();
+      }
+      document.getElementById('sale-modal-backdrop').classList.remove('hidden');
+      document.getElementById('sale-modal-backdrop').setAttribute('aria-hidden','false');
+      document.getElementById('sale-buyer').focus();
+    }
+
+    function closeSaleModal() {
+      document.getElementById('sale-modal-backdrop').classList.add('hidden');
+      document.getElementById('sale-modal-backdrop').setAttribute('aria-hidden','true');
+    }
+
+    // wire sale modal buttons
+    document.getElementById('close-sale-modal').addEventListener('click', closeSaleModal);
+    document.getElementById('cancel-sale-btn').addEventListener('click', function(){ closeSaleModal(); });
+    document.getElementById('sale-modal-backdrop').addEventListener('click', function(e){ if (e.target === this) closeSaleModal(); });
+
+    document.getElementById('add-sale') && document.getElementById('add-sale').addEventListener('click', function(){ openSaleModal(); });
+
+    document.getElementById('sale-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      var sale = {
+        buyer: document.getElementById('sale-buyer').value.trim(),
+        seller: document.getElementById('sale-seller').value || '',
+        value: parseFloat(document.getElementById('sale-value').value) || 0,
+        date: document.getElementById('sale-date').value || '',
+        status: document.getElementById('sale-status').value || 'Concluída',
+        commission: document.getElementById('sale-commission').value || ''
+      };
+      if (!sale.buyer || !sale.value) { alert('Preencha comprador e valor.'); return; }
+      if (editSaleIndex !== null && typeof editSaleIndex !== 'undefined') {
+        sales[editSaleIndex] = sale;
+      } else { sales.unshift(sale); }
+      saveSales();
+      renderSalesList();
+      closeSaleModal();
+    });
+
+    // initialize sales and render
+    loadSales();
+    renderSalesList();
+
+    // Period buttons (simple handlers)
+    var periodBack = document.querySelector('.period-actions .btn-secondary');
+    var periodNow = document.querySelector('.period-actions .btn-primary');
+    if (periodBack) periodBack.addEventListener('click', function(){ alert('Voltando ao mês atual (simulado).'); });
+    if (periodNow) periodNow.addEventListener('click', function(){ alert('Atualizando dados (simulado).'); });
 
     function applyFilters() {
       var fProfile = document.getElementById('filter-profile').value || 'Todos os perfis';
