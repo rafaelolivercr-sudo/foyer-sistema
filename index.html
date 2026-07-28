@@ -1,622 +1,852 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Foyer Imóveis — Sistema</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<!-- Ícones FontAwesome para o menu lateral (CDN correto) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6OgXw7b6T0K0b6qYhM6u0Q4K1eZ5Qk3hQf6Z1q3y3Qv2M0o1k9e6Qq0n8y1p4s5t6r7u8v9w0x1y2z3a4b5c==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zelony Imóveis — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6OgXw7b6T0K0b6qYhM6u0Q4K1eZ5Qk3hQf6Z1q3y3Qv2M0o1k9e6Qq0n8y1p4s5t6r7u8v9w0x1y2z3a4b5c==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<style>
-  /* Variáveis Globais de Cores (Azul Marinho Profundo e Dourado) */
-  :root {
-    --bg-main: #060b13;       /* Fundo geral */
-    --bg-sidebar: #091220;    /* Barra lateral */
-    --bg-card: #0e1b2f;       /* Blocos/cards */
-    --gold: #B8902A;          /* Dourado principal */
-    --gold-light: #F0D080;    /* Dourado claro brilhante */
-    --gold-border: rgba(184, 144, 42, 0.25);
-    --text-main: #ffffff;     /* Texto branco */
-    --text-muted: #8b9bb4;    /* Texto secundário azul acinzentado */
-    --font-serif: 'Playfair Display', serif;
-    --font-sans: 'Inter', sans-serif;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    font-family: var(--font-sans);
-    display: flex;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* LAYOUT PRINCIPAL */
-  .sidebar {
-    width: 260px;
-    background-color: var(--bg-sidebar);
-    border-right: 1px solid var(--gold-border);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-  }
-
-  .main-content {
-    margin-left: 260px;
-    flex: 1;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  /* CONTROLE DE EXIBIÇÃO DE PÁGINAS (SPA) */
-  .app-page {
-    display: none; /* Oculta as páginas por padrão */
-    flex-direction: column;
-    gap: 30px;
-    animation: fadeIn 0.4s ease forwards;
-  }
-
-  .app-page.page-active {
-    display: flex; /* Exibe apenas a página selecionada */
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* SIDEBAR / MENU LATERAL */
-  .brand {
-    padding: 25px 20px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .brand h1 {
-    font-family: var(--font-serif);
-    font-size: 24px;
-    color: var(--gold-light);
-    letter-spacing: 0.12em;
-    font-weight: 700;
-  }
-
-  .brand span {
-    font-size: 9px;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    display: block;
-    margin-top: 4px;
-  }
-
-  .menu-section {
-    padding: 20px 0;
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  .menu-label {
-    font-size: 10px;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 10px 24px;
-    font-weight: 700;
-  }
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 12px 24px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-
-  .menu-item:hover, .menu-item.active {
-    color: var(--text-main);
-    background: linear-gradient(90deg, rgba(184, 144, 42, 0.15) 0%, transparent 100%);
-    border-left: 3px solid var(--gold);
-    padding-left: 21px;
-  }
-
-  .menu-item i {
-    width: 18px;
-    font-size: 16px;
-    text-align: center;
-  }
-
-  .sidebar-user {
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--gold);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    border: 2px solid var(--gold-light);
-  }
-
-  .user-info .user-name {
-    font-size: 13px;
-    color: var(--text-main);
-    font-weight: 700;
-  }
-
-  .user-info .user-role {
-    font-size: 11px;
-    color: var(--gold-light);
-  }
-
-  /* HEADERS DAS PÁGINAS */
-  .header-dashboard {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 20px;
-  }
-
-  .welcome-text h2 {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
-
-  .welcome-text p {
-    color: var(--text-muted);
-    font-size: 13px;
-  }
-
-  /* FILTRO DE PERÍODO */
-  .period-filter {
-    background-color: var(--bg-sidebar);
-    border: 1px solid var(--gold-border);
-    border-radius: 12px;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
-
-  .filter-title {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    letter-spacing: 0.1em;
-    font-weight: 700;
-  }
-
-  .date-inputs {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-
-  .date-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .date-field label {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .date-field input {
-    background-color: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    outline: none;
-  }
-
-  .btn-update {
-    background-color: var(--gold);
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .btn-update:hover {
-    background-color: #96731e;
-  }
-
-  /* METRICAS / CARDS GRIDES */
-  .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-  }
-
-  .card-metric {
-    background-color: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 24px;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s;
-  }
-
-  .card-metric:hover {
-    transform: translateY(-3px);
-    border-color: var(--gold-border);
-  }
-
-  .card-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
-    font-weight: 600;
-  }
-
-  .card-value {
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--gold-light);
-  }
-
-  .card-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 8px;
-  }
-
-  /* SEÇÃO DE RANKING / TABELAS */
-  .ranking-section {
-    background-color: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    margin-top: 10px;
-  }
-
-  .ranking-section h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: var(--gold-light);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .ranking-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
-
-  .ranking-table th {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 12px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    letter-spacing: 0.05em;
-  }
-
-  .ranking-table td {
-    padding: 14px 15px;
-    font-size: 13px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: var(--text-main);
-  }
-
-  .ranking-table tr:hover td {
-    background-color: rgba(255, 255, 255, 0.02);
-  }
-
-  .badge-position {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 12px;
-  }
-
-  .pos-1 { background-color: var(--gold); color: #fff; }
-  .pos-2 { background-color: #8b9bb4; color: #060b13; }
-  .pos-3 { background-color: #cd7f32; color: #fff; }
-  .pos-other { color: var(--text-muted); }
-
-  .rh-placeholder {
-    background-color: var(--bg-card);
-    border: 1px dashed var(--gold-border);
-    border-radius: 12px;
-    padding: 60px;
-    text-align: center;
-    color: var(--text-muted);
-  }
-</style>
-</head>
-<body>
-
-<!-- SPLASH SCREEN DE CARREGAMENTO -->
-<div id="app-splash" style="position:fixed;inset:0;z-index:99999;background:#060b13;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
-  <div class="sp-particles" id="sp-particles"></div>
-  <div class="sp-glow" style="position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(184,144,42,0.12) 0%,transparent 70%);"></div>
-  
-  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;margin-bottom:36px;">
-    <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#F0D080;letter-spacing:0.12em;">FOYER</div>
-    <div style="font-size:10px;color:rgba(184,144,42,0.5);letter-spacing:0.4em;text-transform:uppercase;margin-top:6px;">Imóveis · Sistema de Gestão</div>
-  </div>
-  
-  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;">
-    <div style="height:2px;background:rgba(184,144,42,0.15);border-radius:2px;width:220px;overflow:hidden;">
-      <div style="height:100%;width:50%;background:var(--gold);border-radius:2px;"></div>
-    </div>
-    <div class="sp-status" style="font-size:10px;color:rgba(184,144,42,0.5);letter-spacing:0.15em;text-transform:uppercase;">Carregando dados...</div>
-  </div>
-</div>
-
-<!-- BARRA LATERAL (SIDEBAR) -->
-<aside class="sidebar">
-  <div class="brand">
-    <h1>FOYER</h1>
-    <span>Imóveis</span>
-  </div>
-  
-  <nav class="menu-section" aria-label="Menu principal">
-    <div class="menu-label">Módulos</div>
-    <div class="menu-item active" data-page="page-dashboard" aria-current="page"><i class="fa-solid fa-chart-pie"></i> Dashboard</div>
-    <div class="menu-item" data-page="page-properties"><i class="fa-solid fa-building"></i> Imóveis</div>
-    <div class="menu-item" data-page="page-leads"><i class="fa-solid fa-users"></i> Leads</div>
-    <div class="menu-item" data-page="page-reports"><i class="fa-solid fa-file-lines"></i> Relatórios</div>
-    <div class="menu-item" data-page="page-settings"><i class="fa-solid fa-gear"></i> Configurações</div>
-  </nav>
-
-  <div class="sidebar-user" role="status" aria-live="polite">
-    <div class="user-avatar">AR</div>
-    <div class="user-info">
-      <div class="user-name">Admin</div>
-      <div class="user-role">Administrador</div>
-    </div>
-    <div style="margin-left:auto;margin-right:16px;">
-      <button id="login-btn" class="btn-update" style="padding:6px 10px;font-size:12px;">Entrar</button>
-    </div>
-  </div>
-  </aside>
-
-<main class="main-content">
-  <section id="page-dashboard" class="app-page page-active" aria-labelledby="dash-title">
-    <header class="header-dashboard">
-      <div class="welcome-text">
-        <h2 id="dash-title" tabindex="-1">Bem-vindo ao painel</h2>
-        <p>Visão geral das métricas principais</p>
-      </div>
-      <div class="period-filter">
-        <div>
-          <div class="filter-title">Período</div>
-        </div>
-        <div class="date-inputs">
-          <div class="date-field">
-            <label for="from-date">De</label>
-            <input id="from-date" type="date">
-          </div>
-          <div class="date-field">
-            <label for="to-date">Até</label>
-            <input id="to-date" type="date">
-          </div>
-          <button class="btn-update">Atualizar</button>
-        </div>
-      </div>
-    </header>
-
-    <div class="metrics-grid">
-      <div class="card-metric">
-        <div class="card-label">Novos leads</div>
-        <div class="card-value">124</div>
-        <div class="card-sub">Últimos 30 dias</div>
-      </div>
-      <div class="card-metric">
-        <div class="card-label">Visitas</div>
-        <div class="card-value">3.2k</div>
-        <div class="card-sub">Últimos 30 dias</div>
-      </div>
-      <div class="card-metric">
-        <div class="card-label">Negócios</div>
-        <div class="card-value">18</div>
-        <div class="card-sub">Fechados</div>
-      </div>
-      <div class="card-metric">
-        <div class="card-label">Receita</div>
-        <div class="card-value">R$ 72.400</div>
-        <div class="card-sub">Mês atual</div>
-      </div>
-    </div>
-
-    <div class="ranking-section">
-      <h3>Top corretores</h3>
-      <div class="rh-placeholder">Tabela de ranking (placeholder)</div>
-    </div>
-  </section>
-
-  <section id="page-properties" class="app-page" aria-labelledby="props-title">
-    <h2 id="props-title" tabindex="-1">Imóveis</h2>
-    <div class="rh-placeholder">Lista de imóveis</div>
-  </section>
-
-  <section id="page-leads" class="app-page" aria-labelledby="leads-title">
-    <h2 id="leads-title" tabindex="-1">Leads</h2>
-    <div class="rh-placeholder">Lista de leads</div>
-  </section>
-
-  <section id="page-reports" class="app-page" aria-labelledby="reports-title">
-    <h2 id="reports-title" tabindex="-1">Relatórios</h2>
-    <div class="rh-placeholder">Relatórios e exportações</div>
-  </section>
-
-  <section id="page-settings" class="app-page" aria-labelledby="settings-title">
-    <h2 id="settings-title" tabindex="-1">Configurações</h2>
-    <div class="rh-placeholder">Preferências do sistema</div>
-  </section>
-
-</main>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Esconder splash após carregar
-    setTimeout(function () {
-      var sp = document.getElementById('app-splash');
-      if (sp) {
-        sp.style.transition = 'opacity 0.35s ease';
-        sp.style.opacity = '0';
-        sp.style.pointerEvents = 'none';
-        setTimeout(function () { sp.remove(); }, 400);
-      }
-    }, 700);
-
-    // Navegação SPA simples
-    function showPage(id) {
-      document.querySelectorAll('.app-page').forEach(function (p) { p.classList.remove('page-active'); });
-      var el = document.getElementById(id);
-      if (el) el.classList.add('page-active');
+  <style>
+    :root {
+      --bg: #060b13;
+      --panel: #0f1726;
+      --panel-strong: rgba(15, 23, 38, 0.92);
+      --gold: #B8902A;
+      --gold-soft: #cfb35b;
+      --text: #f5f5f5;
+      --text-muted: #8b9bb4;
+      --border: rgba(184, 144, 42, 0.16);
+      --radius: 28px;
+      --shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+      --font-sans: 'Inter', sans-serif;
+      --font-serif: 'Playfair Display', serif;
     }
 
-    document.querySelectorAll('.menu-item[data-page]').forEach(function (item) {
-      item.addEventListener('click', function () {
-        document.querySelectorAll('.menu-item').forEach(function (i) { i.classList.remove('active'); });
-        item.classList.add('active');
-        var page = item.getAttribute('data-page');
-        showPage(page);
-        var heading = document.querySelector('#' + page + ' h2');
-        if (heading) heading.focus();
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      background: radial-gradient(circle at top left, rgba(184, 144, 42, 0.18), transparent 24%),
+                  radial-gradient(circle at bottom right, rgba(184, 144, 42, 0.08), transparent 20%),
+                  var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .login-frame {
+      width: min(1200px, 100%);
+      min-height: 640px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(10, 15, 24, 0.96);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+    }
+
+    .login-hero,
+    .login-panel {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .login-hero {
+      background: linear-gradient(160deg, rgba(184, 144, 42, 0.12), transparent 60%),
+                  linear-gradient(180deg, rgba(255,255,255,0.02), transparent 45%);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.4rem, 4vw, 4.4rem);
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .brand-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-copy p {
+      line-height: 1.85;
+      color: var(--text-muted);
+      max-width: 520px;
+    }
+
+    .benefits-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .benefit {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 18px 18px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .benefit-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: rgba(184, 144, 42, 0.18);
+      color: var(--gold);
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .benefit-text {
+      display: grid;
+      gap: 4px;
+    }
+
+    .benefit-text strong {
+      color: var(--text);
+      font-size: 0.97rem;
+      display: block;
+    }
+
+    .benefit-text span {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .login-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
+      border-radius: 0 0 0 var(--radius);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      margin-top: auto;
+      margin-bottom: auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .login-card h1 {
+      font-size: clamp(2rem, 2.6vw, 2.8rem);
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 0.98rem;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold-soft);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: rgba(184, 144, 42, 0.55);
+      transform: translateY(-1px);
+    }
+
+    .login-actions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(90deg, var(--gold), #f0d080);
+      color: #060b13;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 40px rgba(184, 144, 42, 0.18);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 48px rgba(184, 144, 42, 0.24);
+    }
+
+    .login-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .login-footer a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .legal {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.82rem;
+      margin-top: 18px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .dashboard-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      display: grid;
+      gap: 14px;
+    }
+
+    .dashboard-card h2 {
+      font-size: 1.1rem;
+      color: var(--gold-soft);
+      margin: 0;
+    }
+
+    .dashboard-card .metric-value {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .dashboard-card .metric-detail {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .dashboard-overview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .dashboard-overview span {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .dashboard-sidebar {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 420px;
+      overflow-y: auto;
+    }
+
+    .dashboard-sidebar button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      font-size: 0.94rem;
+    }
+
+    .dashboard-sidebar button.active,
+    .dashboard-sidebar button:hover {
+      background: rgba(184, 144, 42, 0.14);
+      border-color: rgba(184, 144, 42, 0.35);
+      color: var(--gold);
+    }
+
+    .dashboard-sections {
+      display: grid;
+      gap: 20px;
+    }
+
+    .dashboard-section {
+      display: none;
+      gap: 20px;
+    }
+
+    .dashboard-section.active {
+      display: grid;
+    }
+
+    .dashboard-card.small {
+      padding: 18px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 960px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-sidebar {
+        flex-direction: row;
+        overflow-x: auto;
+        min-height: auto;
+      }
+
+      .dashboard-sidebar button {
+        flex: 1 0 auto;
+        white-space: nowrap;
+      }
+    }
+      .login-frame {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .login-hero,
+      .login-panel {
+        padding: 32px;
+      }
+
+      .login-panel {
+        border-radius: 0 0 var(--radius) var(--radius);
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 16px;
+      }
+
+      .login-frame {
+        border-radius: 24px;
+      }
+
+      .login-hero,
+      .login-panel {
+        padding: 24px;
+      }
+
+      .login-card {
+        max-width: 100%;
+      }
+
+      .benefits-list {
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-frame" aria-label="Tela de login Zelony Imóveis">
+    <section class="login-hero">
+      <div class="hero-copy">
+        <div>
+          <div class="brand-title">ZELONY</div>
+          <div class="brand-sub">Imóveis</div>
+        </div>
+        <p>Plataforma de gestão de vendas, comissões e equipes. Acesse relatórios, controle de acesso por usuário e visualização financeira com uma experiência elegante pensada para o mercado imobiliário.</p>
+      </div>
+
+      <div class="benefits-list">
+        <div class="benefit">
+          <span class="benefit-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <div class="benefit-text">
+            <strong>Acompanhe vendas em tempo real</strong>
+            <span>Insights rápidos e visão clara das metas.</span>
+          </div>
+        </div>
+
+        <div class="benefit">
+          <span class="benefit-icon"><i class="fa-solid fa-user-shield"></i></span>
+          <div class="benefit-text">
+            <strong>Controle de acesso por perfil</strong>
+            <span>Permissões seguras para cada membro da equipe.</span>
+          </div>
+        </div>
+
+        <div class="benefit">
+          <span class="benefit-icon"><i class="fa-solid fa-sack-dollar"></i></span>
+          <div class="benefit-text">
+            <strong>Visualização financeira completa</strong>
+            <span>Dados bancários e comissões organizados.</span>
+          </div>
+        </div>
+
+        <div class="benefit">
+          <span class="benefit-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <div class="benefit-text">
+            <strong>Treinamento e processos operacionais</strong>
+            <span>Estruture a jornada da sua equipe com clareza.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-panel">
+      <div class="login-card">
+        <div>
+          <h1>Bem-vindo de volta</h1>
+          <p>Entre com suas credenciais para acessar o sistema Zelony.</p>
+        </div>
+
+        <form class="form-group" action="#" method="post" id="login-form">
+          <label class="form-label" for="email">Login</label>
+          <input class="input-field" id="email" name="email" type="text" placeholder="admin" required autocomplete="username">
+
+          <label class="form-label" for="password">Senha</label>
+          <input class="input-field" id="password" name="password" type="password" placeholder="150997" required autocomplete="current-password">
+
+          <div class="login-actions">
+            <button type="submit" class="btn-primary">Entrar no sistema</button>
+          </div>
+
+          <div id="login-status" class="legal" style="display:none;color:var(--text);"></div>
+        </form>
+
+        <div class="login-footer">
+          <span>© 2026 Zelony Imóveis · Todos os direitos reservados</span>
+          <a href="#">Trocar minha senha</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <main id="dashboard-page" class="login-frame hidden" aria-label="Painel Zelony Imóveis">
+    <section class="login-hero">
+      <div class="hero-copy">
+        <div>
+          <div class="brand-title">ZELONY</div>
+          <div class="brand-sub">Imóveis — Painel</div>
+        </div>
+        <p>Você está logado como <strong>admin</strong>. Abaixo estão os indicadores principais do sistema com um visual mais próximo do painel real.</p>
+      </div>
+      <div class="benefits-list">
+        <div class="benefit">
+          <span class="benefit-icon"><i class="fa-solid fa-user-check"></i></span>
+          <div class="benefit-text">
+            <strong>Acesso autorizado</strong>
+            <span>Somente admin pode entrar com esta credencial.</span>
+          </div>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></span>
+          <div class="benefit-text">
+            <strong>Área privada</strong>
+            <span>Acesso restrito para demonstração segura.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="login-panel">
+      <div class="login-card">
+        <div>
+          <h1>Olá, admin</h1>
+          <p>Bem-vindo ao sistema Zelony. Você já está autenticado e pode navegar pelo painel com as métricas principais.</p>
+        </div>
+
+        <div class="dashboard-overview">
+          <span>Visão geral atualizada em tempo real</span>
+          <span><strong>Status:</strong> Autenticado</span>
+        </div>
+
+        <div class="dashboard-layout">
+          <aside class="dashboard-sidebar" role="tablist" aria-label="Menu do painel">
+            <button type="button" class="active" data-section="overview"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+            <button type="button" data-section="dash-rh"><i class="fa-solid fa-people-group"></i> Dash RH</button>
+            <button type="button" data-section="agendamentos"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
+            <button type="button" data-section="financeiro"><i class="fa-solid fa-wallet"></i> Financeiro</button>
+            <button type="button" data-section="minha-carteira"><i class="fa-solid fa-suitcase"></i> Minha Carteira</button>
+            <button type="button" data-section="vendas-comissao"><i class="fa-solid fa-chart-line"></i> Vendas / Comissão</button>
+            <button type="button" data-section="treinamentos"><i class="fa-solid fa-chalkboard-user"></i> Treinamentos</button>
+            <button type="button" data-section="documentos"><i class="fa-solid fa-file-lines"></i> Documentos</button>
+            <button type="button" data-section="proc-operacional"><i class="fa-solid fa-gears"></i> Proc. Operacional</button>
+            <button type="button" data-section="envios-whatsapp"><i class="fa-brands fa-whatsapp"></i> Envios WhatsApp</button>
+            <button type="button" data-section="usuarios"><i class="fa-solid fa-user"></i> Usuários</button>
+          </aside>
+
+          <div class="dashboard-sections">
+            <div id="section-overview" class="dashboard-section active">
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Novos leads</h2>
+                  <div class="metric-value">124</div>
+                  <div class="metric-detail">Leads captados nos últimos 30 dias.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Visitas</h2>
+                  <div class="metric-value">3.2k</div>
+                  <div class="metric-detail">Acompanhamento de visitas no período atual.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Negócios fechados</h2>
+                  <div class="metric-value">18</div>
+                  <div class="metric-detail">Transações concluídas com sucesso.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Receita</h2>
+                  <div class="metric-value">R$ 72.400</div>
+                  <div class="metric-detail">Receita estimada do mês atual.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-dash-rh" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Dashboard RH</h2>
+                <div class="metric-detail">Resumo de equipe, presença e status de colaboradores.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Equipe ativa</h2>
+                  <div class="metric-value">24</div>
+                  <div class="metric-detail">Corretores e suporte no momento.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Treinamentos</h2>
+                  <div class="metric-value">8</div>
+                  <div class="metric-detail">Cursos em andamento.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-agendamentos" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Agendamentos</h2>
+                <div class="metric-detail">Compromissos marcados e próximos atendimentos.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Próximos agendamentos</h2>
+                  <div class="metric-value">12</div>
+                  <div class="metric-detail">Agendas para os próximos 3 dias.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Atendimentos concluídos</h2>
+                  <div class="metric-value">42</div>
+                  <div class="metric-detail">Atendimentos realizados esta semana.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-financeiro" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Financeiro</h2>
+                <div class="metric-detail">Receita, despesas e fluxo de caixa.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Saldo disponível</h2>
+                  <div class="metric-value">R$ 128.900</div>
+                  <div class="metric-detail">Saldo atual em caixa.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Despesas</h2>
+                  <div class="metric-value">R$ 18.200</div>
+                  <div class="metric-detail">Gastos fixos e variáveis.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-minha-carteira" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Minha Carteira</h2>
+                <div class="metric-detail">Propriedades e clientes sob responsabilidade.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Imóveis ativos</h2>
+                  <div class="metric-value">16</div>
+                  <div class="metric-detail">Imóveis cadastrados na sua carteira.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Carteira em progresso</h2>
+                  <div class="metric-value">7</div>
+                  <div class="metric-detail">Negócios em negociação.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-vendas-comissao" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Vendas / Comissão</h2>
+                <div class="metric-detail">Comissões geradas e vendas concluídas.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Comissão total</h2>
+                  <div class="metric-value">R$ 14.600</div>
+                  <div class="metric-detail">Valor acumulado no período.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Negócios fechados</h2>
+                  <div class="metric-value">10</div>
+                  <div class="metric-detail">Vendas registradas este mês.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-treinamentos" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Treinamentos</h2>
+                <div class="metric-detail">Cursos e módulos para a equipe.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Em progresso</h2>
+                  <div class="metric-value">5</div>
+                  <div class="metric-detail">Pessoas em treinamento agora.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Próximos cursos</h2>
+                  <div class="metric-value">3</div>
+                  <div class="metric-detail">Cursos agendados para a semana.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-documentos" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Documentos</h2>
+                <div class="metric-detail">Arquivos de contratos, relatórios e fichas.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Contratos</h2>
+                  <div class="metric-value">14</div>
+                  <div class="metric-detail">Documentos prontos para assinatura.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Relatórios</h2>
+                  <div class="metric-value">9</div>
+                  <div class="metric-detail">Relatórios enviados e pendentes.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-proc-operacional" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Proc. Operacional</h2>
+                <div class="metric-detail">Fluxos e processos internos do time.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Processos ativos</h2>
+                  <div class="metric-value">7</div>
+                  <div class="metric-detail">Operações em andamento.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Alertas</h2>
+                  <div class="metric-value">2</div>
+                  <div class="metric-detail">Pendências internas importantes.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-envios-whatsapp" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Envios WhatsApp</h2>
+                <div class="metric-detail">Mensagens e campanhas enviadas ao público.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Campanhas enviadas</h2>
+                  <div class="metric-value">21</div>
+                  <div class="metric-detail">Mensagens enviadas esta semana.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Taxa de abertura</h2>
+                  <div class="metric-value">87%</div>
+                  <div class="metric-detail">Engajamento com entregas recentes.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="section-usuarios" class="dashboard-section">
+              <div class="dashboard-card small">
+                <h2>Usuários</h2>
+                <div class="metric-detail">Gestão de contas, permissões e acesso.</div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="dashboard-card">
+                  <h2>Usuários ativos</h2>
+                  <div class="metric-value">12</div>
+                  <div class="metric-detail">Acessaram o sistema nas últimas 24h.</div>
+                </div>
+                <div class="dashboard-card">
+                  <h2>Novos cadastros</h2>
+                  <div class="metric-value">3</div>
+                  <div class="metric-detail">Contas criadas nos últimos 7 dias.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-actions">
+          <button id="logout-button" class="btn-primary" style="background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);box-shadow:none;">Sair</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function setAuthState(isAuthed) {
+      if (isAuthed) {
+        localStorage.setItem('zelony_authed', '1');
+      } else {
+        localStorage.removeItem('zelony_authed');
+      }
+    }
+
+    function isAuthed() {
+      return localStorage.getItem('zelony_authed') === '1';
+    }
+
+    function showDashboard() {
+      document.querySelector('main.login-frame').classList.add('hidden');
+      document.getElementById('dashboard-page').classList.remove('hidden');
+    }
+
+    function showLogin() {
+      document.querySelector('main.login-frame').classList.remove('hidden');
+      document.getElementById('dashboard-page').classList.add('hidden');
+    }
+
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var loginInput = document.getElementById('email');
+      var passwordInput = document.getElementById('password');
+      var status = document.getElementById('login-status');
+      var loginValue = loginInput.value.trim();
+      var passwordValue = passwordInput.value.trim();
+
+      status.style.display = 'block';
+      if (loginValue === 'admin' && passwordValue === '150997') {
+        status.textContent = 'Login realizado com sucesso. Redirecionando para o painel...';
+        status.style.color = 'var(--gold)';
+        setAuthState(true);
+        showDashboard();
+      } else {
+        status.textContent = 'Login ou senha incorretos. Use admin / 150997.';
+        status.style.color = '#ff6b6b';
+      }
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function() {
+      setAuthState(false);
+      showLogin();
+      var status = document.getElementById('login-status');
+      status.style.display = 'none';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('email').disabled = false;
+      document.getElementById('password').disabled = false;
+      document.querySelector('#login-form button[type="submit"]').disabled = false;
+    });
+
+    document.querySelectorAll('.dashboard-sidebar button').forEach(function(button) {
+      button.addEventListener('click', function() {
+        document.querySelectorAll('.dashboard-sidebar button').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        var sectionId = 'section-' + button.getAttribute('data-section');
+        document.querySelectorAll('.dashboard-section').forEach(function(section) {
+          section.classList.remove('active');
+        });
+        var activeSection = document.getElementById(sectionId);
+        if (activeSection) {
+          activeSection.classList.add('active');
+        }
       });
     });
 
-    // Garantir página padrão
-    showPage('page-dashboard');
-  });
-</script>
-
-<!-- Login modal + logic -->
-<div id="login-modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,11,19,0.6);z-index:10000;">
-  <div style="background:var(--bg-card);padding:20px;border-radius:10px;min-width:320px;">
-    <h3 style="margin-bottom:10px;color:var(--gold-light)">Entrar</h3>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <input id="login-user" placeholder="Usuário" style="padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--bg-card);color:#fff">
-      <input id="login-pass" type="password" placeholder="Senha" style="padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--bg-card);color:#fff">
-      <div style="display:flex;gap:8px;justify-content:flex-end;">
-        <button id="login-cancel" class="btn-update" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text-main);">Cancelar</button>
-        <button id="login-submit" class="btn-update">Entrar</button>
-      </div>
-      <div id="login-error" style="color:#ff6b6b;font-size:13px;display:none;margin-top:6px;"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  var loginBtn = document.getElementById('login-btn');
-  var modal = document.getElementById('login-modal');
-  var cancel = document.getElementById('login-cancel');
-  var submit = document.getElementById('login-submit');
-  var userInput = document.getElementById('login-user');
-  var passInput = document.getElementById('login-pass');
-  var err = document.getElementById('login-error');
-
-  function isAuthed(){ return sessionStorage.getItem('foyer_authed') === '1'; }
-
-  function updateLoginUI(){
-    if(isAuthed()){
-      loginBtn.textContent = 'Sair';
-    } else {
-      loginBtn.textContent = 'Entrar';
+    if (isAuthed()) {
+      showDashboard();
     }
-  }
-
-  function openModal(){ err.style.display='none'; userInput.value=''; passInput.value=''; modal.style.display='flex'; userInput.focus(); }
-  function closeModal(){ modal.style.display='none'; }
-
-  loginBtn.addEventListener('click', function(){
-    if(isAuthed()){
-      sessionStorage.removeItem('foyer_authed');
-      updateLoginUI();
-      location.reload();
-      return;
-    }
-    openModal();
-  });
-
-  cancel.addEventListener('click', function(e){ e.preventDefault(); closeModal(); });
-
-  submit.addEventListener('click', function(e){
-    e.preventDefault();
-    err.style.display='none';
-    var u = userInput.value.trim();
-    var p = passInput.value;
-    if(!u || !p){ err.textContent='Preencha usuário e senha.'; err.style.display='block'; return; }
-
-    var headers = new Headers();
-    headers.set('Authorization','Basic '+btoa(u+':'+p));
-
-    fetch(window.location.pathname || '/', { method: 'GET', headers: headers, cache: 'no-store' })
-      .then(function(res){
-        if(res.status === 200){
-          sessionStorage.setItem('foyer_authed','1');
-          closeModal();
-          updateLoginUI();
-        } else if(res.status === 401){
-          err.textContent = 'Credenciais inválidas.'; err.style.display='block';
-        } else {
-          err.textContent = 'Resposta: ' + res.status; err.style.display='block';
-        }
-      }).catch(function(errx){
-        err.textContent = 'Erro de conexão.'; err.style.display='block';
-      });
-  });
-
-  // init
-  updateLoginUI();
-})();
-</script>
-
+  </script>
 </body>
 </html>
