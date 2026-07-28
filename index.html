@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zelony Imóveis — Login</title>
+  <title>Foyer Imóveis — Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,14 +11,14 @@
 
   <style>
     :root {
-      --bg: #060b13;
-      --panel: #0f1726;
-      --panel-strong: rgba(15, 23, 38, 0.92);
+      --bg: #071a35;
+      --panel: #0d2445;
+      --panel-strong: rgba(13, 36, 69, 0.94);
       --gold: #B8902A;
-      --gold-soft: #cfb35b;
+      --gold-soft: #dfc375;
       --text: #f5f5f5;
-      --text-muted: #8b9bb4;
-      --border: rgba(184, 144, 42, 0.16);
+      --text-muted: #9bb2d2;
+      --border: rgba(184, 144, 42, 0.18);
       --radius: 28px;
       --shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
       --font-sans: 'Inter', sans-serif;
@@ -36,8 +36,8 @@
     }
 
     body {
-      background: radial-gradient(circle at top left, rgba(184, 144, 42, 0.18), transparent 24%),
-                  radial-gradient(circle at bottom right, rgba(184, 144, 42, 0.08), transparent 20%),
+      background: radial-gradient(circle at top left, rgba(20, 108, 189, 0.22), transparent 22%),
+                  radial-gradient(circle at bottom right, rgba(184, 144, 42, 0.14), transparent 18%),
                   var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
@@ -68,9 +68,9 @@
     }
 
     .login-hero {
-      background: linear-gradient(160deg, rgba(184, 144, 42, 0.12), transparent 60%),
-                  linear-gradient(180deg, rgba(255,255,255,0.02), transparent 45%);
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      background: linear-gradient(160deg, rgba(20, 108, 189, 0.18), transparent 55%),
+                  linear-gradient(180deg, rgba(255,255,255,0.04), transparent 35%);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .brand-title {
@@ -422,10 +422,10 @@
     <section class="login-hero">
       <div class="hero-copy">
         <div>
-          <div class="brand-title">ZELONY</div>
+          <div class="brand-title">FOYER</div>
           <div class="brand-sub">Imóveis</div>
         </div>
-        <p>Plataforma de gestão de vendas, comissões e equipes. Acesse relatórios, controle de acesso por usuário e visualização financeira com uma experiência elegante pensada para o mercado imobiliário.</p>
+        <p>Plataforma de gestão de vendas, comissões e equipes. Acesse relatórios, controle de acesso por usuário e visualização financeira com uma experiência azul e dourada pensada para o mercado imobiliário.</p>
       </div>
 
       <div class="benefits-list">
@@ -467,7 +467,7 @@
       <div class="login-card">
         <div>
           <h1>Bem-vindo de volta</h1>
-          <p>Entre com suas credenciais para acessar o sistema Zelony.</p>
+          <p>Entre com suas credenciais para acessar o sistema Foyer Imóveis.</p>
         </div>
 
         <form class="form-group" action="#" method="post" id="login-form">
@@ -485,18 +485,18 @@
         </form>
 
         <div class="login-footer">
-          <span>© 2026 Zelony Imóveis · Todos os direitos reservados</span>
+          <span>© 2026 Foyer Imóveis · Todos os direitos reservados</span>
           <a href="#">Trocar minha senha</a>
         </div>
       </div>
     </section>
   </main>
 
-  <main id="dashboard-page" class="login-frame hidden" aria-label="Painel Zelony Imóveis">
+  <main id="dashboard-page" class="login-frame hidden" aria-label="Painel Foyer Imóveis">
     <section class="login-hero">
       <div class="hero-copy">
         <div>
-          <div class="brand-title">ZELONY</div>
+          <div class="brand-title">FOYER</div>
           <div class="brand-sub">Imóveis — Painel</div>
         </div>
         <p>Você está logado como <strong>admin</strong>. Abaixo estão os indicadores principais do sistema com um visual mais próximo do painel real.</p>
@@ -522,7 +522,7 @@
       <div class="login-card">
         <div>
           <h1>Olá, admin</h1>
-          <p>Bem-vindo ao sistema Zelony. Você já está autenticado e pode navegar pelo painel com as métricas principais.</p>
+          <p>Bem-vindo ao sistema Foyer Imóveis. Você já está autenticado e pode navegar pelo painel com as métricas principais.</p>
         </div>
 
         <div class="dashboard-overview">
@@ -773,14 +773,14 @@
   <script>
     function setAuthState(isAuthed) {
       if (isAuthed) {
-        localStorage.setItem('zelony_authed', '1');
+        localStorage.setItem('foyer_authed', '1');
       } else {
-        localStorage.removeItem('zelony_authed');
+        localStorage.removeItem('foyer_authed');
       }
     }
 
     function isAuthed() {
-      return localStorage.getItem('zelony_authed') === '1';
+      return localStorage.getItem('foyer_authed') === '1';
     }
 
     function showDashboard() {
