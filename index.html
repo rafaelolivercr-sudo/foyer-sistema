@@ -175,10 +175,12 @@
 
     .dashboard-shell {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
       gap: 24px;
       padding: 28px 32px 32px;
       width: 100%;
+      max-width: 1420px;
+      margin: 0 auto;
     }
 
     .dashboard-sidebar {
@@ -1182,283 +1184,307 @@
     </div>
 
     <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" role="navigation" aria-label="Menu do painel">
+        <div class="sidebar-header">
+          <div class="brand-title">FOYER</div>
+          <div class="brand-sub">Imóveis</div>
+        </div>
+        <nav class="sidebar-menu">
+          <button type="button" class="active" data-section="overview"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+          <button type="button" data-section="dash-rh"><i class="fa-solid fa-people-group"></i> Dash RH</button>
+          <button type="button" data-section="agendamentos"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
+          <button type="button" data-section="financeiro"><i class="fa-solid fa-wallet"></i> Financeiro</button>
+          <button type="button" data-section="minha-carteira"><i class="fa-solid fa-suitcase"></i> Minha Carteira</button>
+          <button type="button" data-section="vendas-comissao"><i class="fa-solid fa-chart-line"></i> Vendas / Comissão</button>
+          <button type="button" data-section="treinamentos"><i class="fa-solid fa-chalkboard-user"></i> Treinamentos</button>
+          <button type="button" data-section="documentos"><i class="fa-solid fa-file-lines"></i> Documentos</button>
+          <button type="button" data-section="proc-operacional"><i class="fa-solid fa-gears"></i> Proc. Operacional</button>
+          <button type="button" data-section="envios-whatsapp"><i class="fa-brands fa-whatsapp"></i> Envios WhatsApp</button>
+          <button type="button" data-section="usuarios"><i class="fa-solid fa-user"></i> Usuários</button>
+        </nav>
+        <div class="sidebar-profile">
+          <span>R</span>
+          <div>
+            <strong>RAFAEL</strong>
+            <small>Diretor · Cristo Rei</small>
+          </div>
+        </div>
+      </aside>
+
       <section class="dashboard-content">
         <div class="dashboard-header-bar">
           <h1>Dashboard</h1>
         </div>
 
-        <div class="dashboard-grid-top">
-          <article class="banner-card">
-            <div class="panel-label">Dashboard Comercial</div>
-            <h2>Resultado de vendas em tempo real</h2>
-            <p>Foco no mês atual por padrão. Use o período personalizado para analisar qualquer janela de datas.</p>
-            <div class="banner-footer">
-              <span class="live-chip"><i class="fa-solid fa-circle"></i> Ao vivo</span>
-              <span>Atualizado 00:42</span>
-            </div>
-          </article>
+        <div class="dashboard-sections">
+          <div id="section-overview" class="dashboard-section active">
+            <div class="dashboard-grid-top">
+              <article class="banner-card">
+                <div class="panel-label">Dashboard Comercial</div>
+                <h2>Resultado de vendas em tempo real</h2>
+                <p>Foco no mês atual por padrão. Use o período personalizado para analisar qualquer janela de datas.</p>
+                <div class="banner-footer">
+                  <span class="live-chip"><i class="fa-solid fa-circle"></i> Ao vivo</span>
+                  <span>Atualizado 00:42</span>
+                </div>
+              </article>
 
-          <aside class="period-panel">
-            <div class="panel-label">Período</div>
-            <div class="period-title">JULHO</div>
-            <div class="period-fields">
-              <label>
-                De
-                <input type="text" placeholder="dd/mm/aaaa" disabled>
-              </label>
-              <label>
-                Até
-                <input type="text" placeholder="dd/mm/aaaa" disabled>
-              </label>
+              <aside class="period-panel">
+                <div class="panel-label">Período</div>
+                <div class="period-title">JULHO</div>
+                <div class="period-fields">
+                  <label>
+                    De
+                    <input type="text" placeholder="dd/mm/aaaa" disabled>
+                  </label>
+                  <label>
+                    Até
+                    <input type="text" placeholder="dd/mm/aaaa" disabled>
+                  </label>
+                </div>
+                <div class="period-actions">
+                  <button class="btn-secondary">Voltar ao mês atual</button>
+                  <button class="btn-primary">Atualizar agora</button>
+                </div>
+              </aside>
             </div>
-            <div class="period-actions">
-              <button class="btn-secondary">Voltar ao mês atual</button>
-              <button class="btn-primary">Atualizar agora</button>
+
+            <div class="metric-row">
+              <div class="metric-card">
+                <span class="metric-caption">Número de vendas</span>
+                <strong class="metric-value">18</strong>
+                <span class="metric-note">Somente vendas ativas</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-caption">VGV</span>
+                <strong class="metric-value">R$ 4.903.469</strong>
+                <span class="metric-note">Valor geral de vendas</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-caption">Ticket médio</span>
+                <strong class="metric-value">R$ 272.415</strong>
+                <span class="metric-note">VGV dividido por vendas</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-caption">Top corretor</span>
+                <strong class="metric-value">MICHAEL ...</strong>
+                <span class="metric-note">Maior VGV no período</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-caption">Top equipe</span>
+                <strong class="metric-value">SCHWANK...</strong>
+                <span class="metric-note">Maior VGV no período</span>
+              </div>
             </div>
-          </aside>
-        </div>
 
-        <div class="metric-row">
-          <div class="metric-card">
-            <span class="metric-caption">Número de vendas</span>
-            <strong class="metric-value">18</strong>
-            <span class="metric-note">Somente vendas ativas</span>
+            <div class="bottom-cards">
+              <div class="dashboard-card">
+                <h2>Ranking por VGV</h2>
+                <div class="metric-empty">Sem dados disponíveis</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Produção Agrupada</h2>
+                <div class="metric-empty">Sem dados disponíveis</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Visão por Unidade</h2>
+                <div class="metric-empty">Sem dados disponíveis</div>
+              </div>
+            </div>
           </div>
-          <div class="metric-card">
-            <span class="metric-caption">VGV</span>
-            <strong class="metric-value">R$ 4.903.469</strong>
-            <span class="metric-note">Valor geral de vendas</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-caption">Ticket médio</span>
-            <strong class="metric-value">R$ 272.415</strong>
-            <span class="metric-note">VGV dividido por vendas</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-caption">Top corretor</span>
-            <strong class="metric-value">MICHAEL ...</strong>
-            <span class="metric-note">Maior VGV no período</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-caption">Top equipe</span>
-            <strong class="metric-value">SCHWANK...</strong>
-            <span class="metric-note">Maior VGV no período</span>
-          </div>
-        </div>
 
-        <div class="bottom-cards">
-          <div class="dashboard-card">
-            <h2>Ranking por VGV</h2>
-            <div class="metric-empty">Sem dados disponíveis</div>
+          <div id="section-dash-rh" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Dashboard RH</h2>
+              <div class="metric-detail">Resumo de equipe, presença e status de colaboradores.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Equipe ativa</h2>
+                <div class="metric-value">24</div>
+                <div class="metric-detail">Corretores e suporte no momento.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Treinamentos</h2>
+                <div class="metric-value">8</div>
+                <div class="metric-detail">Cursos em andamento.</div>
+              </div>
+            </div>
           </div>
-          <div class="dashboard-card">
-            <h2>Produção Agrupada</h2>
-            <div class="metric-empty">Sem dados disponíveis</div>
+
+          <div id="section-agendamentos" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Agendamentos</h2>
+              <div class="metric-detail">Compromissos marcados e próximos atendimentos.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Próximos agendamentos</h2>
+                <div class="metric-value">12</div>
+                <div class="metric-detail">Agendas para os próximos 3 dias.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Atendimentos concluídos</h2>
+                <div class="metric-value">42</div>
+                <div class="metric-detail">Atendimentos realizados esta semana.</div>
+              </div>
+            </div>
           </div>
-          <div class="dashboard-card">
-            <h2>Visão por Unidade</h2>
-            <div class="metric-empty">Sem dados disponíveis</div>
+
+          <div id="section-financeiro" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Financeiro</h2>
+              <div class="metric-detail">Receita, despesas e fluxo de caixa.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Saldo disponível</h2>
+                <div class="metric-value">R$ 128.900</div>
+                <div class="metric-detail">Saldo atual em caixa.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Despesas</h2>
+                <div class="metric-value">R$ 18.200</div>
+                <div class="metric-detail">Gastos fixos e variáveis.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-minha-carteira" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Minha Carteira</h2>
+              <div class="metric-detail">Propriedades e clientes sob responsabilidade.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Imóveis ativos</h2>
+                <div class="metric-value">16</div>
+                <div class="metric-detail">Imóveis cadastrados na sua carteira.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Carteira em progresso</h2>
+                <div class="metric-value">7</div>
+                <div class="metric-detail">Negócios em negociação.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-vendas-comissao" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Vendas / Comissão</h2>
+              <div class="metric-detail">Comissões geradas e vendas concluídas.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Comissão total</h2>
+                <div class="metric-value">R$ 14.600</div>
+                <div class="metric-detail">Valor acumulado no período.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Negócios fechados</h2>
+                <div class="metric-value">10</div>
+                <div class="metric-detail">Vendas registradas este mês.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-treinamentos" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Treinamentos</h2>
+              <div class="metric-detail">Cursos e módulos para a equipe.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Em progresso</h2>
+                <div class="metric-value">5</div>
+                <div class="metric-detail">Pessoas em treinamento agora.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Próximos cursos</h2>
+                <div class="metric-value">3</div>
+                <div class="metric-detail">Cursos agendados para a semana.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-documentos" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Documentos</h2>
+              <div class="metric-detail">Arquivos de contratos, relatórios e fichas.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Contratos</h2>
+                <div class="metric-value">14</div>
+                <div class="metric-detail">Documentos prontos para assinatura.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Relatórios</h2>
+                <div class="metric-value">9</div>
+                <div class="metric-detail">Relatórios enviados e pendentes.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-proc-operacional" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Proc. Operacional</h2>
+              <div class="metric-detail">Fluxos e processos internos do time.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Processos ativos</h2>
+                <div class="metric-value">7</div>
+                <div class="metric-detail">Operações em andamento.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Alertas</h2>
+                <div class="metric-value">2</div>
+                <div class="metric-detail">Pendências internas importantes.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-envios-whatsapp" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Envios WhatsApp</h2>
+              <div class="metric-detail">Mensagens e campanhas enviadas ao público.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Campanhas enviadas</h2>
+                <div class="metric-value">21</div>
+                <div class="metric-detail">Mensagens enviadas esta semana.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Taxa de abertura</h2>
+                <div class="metric-value">87%</div>
+                <div class="metric-detail">Engajamento com entregas recentes.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-usuarios" class="dashboard-section">
+            <div class="dashboard-card small">
+              <h2>Usuários</h2>
+              <div class="metric-detail">Gestão de contas, permissões e acesso.</div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h2>Usuários ativos</h2>
+                <div class="metric-value">12</div>
+                <div class="metric-detail">Acessaram o sistema nas últimas 24h.</div>
+              </div>
+              <div class="dashboard-card">
+                <h2>Novos cadastros</h2>
+                <div class="metric-value">3</div>
+                <div class="metric-detail">Contas criadas nos últimos 7 dias.</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </div>
-  </main>
-              <div class="dashboard-card small">
-                <h2>Dashboard RH</h2>
-                <div class="metric-detail">Resumo de equipe, presença e status de colaboradores.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Equipe ativa</h2>
-                  <div class="metric-value">24</div>
-                  <div class="metric-detail">Corretores e suporte no momento.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Treinamentos</h2>
-                  <div class="metric-value">8</div>
-                  <div class="metric-detail">Cursos em andamento.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-agendamentos" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Agendamentos</h2>
-                <div class="metric-detail">Compromissos marcados e próximos atendimentos.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Próximos agendamentos</h2>
-                  <div class="metric-value">12</div>
-                  <div class="metric-detail">Agendas para os próximos 3 dias.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Atendimentos concluídos</h2>
-                  <div class="metric-value">42</div>
-                  <div class="metric-detail">Atendimentos realizados esta semana.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-financeiro" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Financeiro</h2>
-                <div class="metric-detail">Receita, despesas e fluxo de caixa.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Saldo disponível</h2>
-                  <div class="metric-value">R$ 128.900</div>
-                  <div class="metric-detail">Saldo atual em caixa.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Despesas</h2>
-                  <div class="metric-value">R$ 18.200</div>
-                  <div class="metric-detail">Gastos fixos e variáveis.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-minha-carteira" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Minha Carteira</h2>
-                <div class="metric-detail">Propriedades e clientes sob responsabilidade.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Imóveis ativos</h2>
-                  <div class="metric-value">16</div>
-                  <div class="metric-detail">Imóveis cadastrados na sua carteira.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Carteira em progresso</h2>
-                  <div class="metric-value">7</div>
-                  <div class="metric-detail">Negócios em negociação.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-vendas-comissao" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Vendas / Comissão</h2>
-                <div class="metric-detail">Comissões geradas e vendas concluídas.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Comissão total</h2>
-                  <div class="metric-value">R$ 14.600</div>
-                  <div class="metric-detail">Valor acumulado no período.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Negócios fechados</h2>
-                  <div class="metric-value">10</div>
-                  <div class="metric-detail">Vendas registradas este mês.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-treinamentos" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Treinamentos</h2>
-                <div class="metric-detail">Cursos e módulos para a equipe.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Em progresso</h2>
-                  <div class="metric-value">5</div>
-                  <div class="metric-detail">Pessoas em treinamento agora.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Próximos cursos</h2>
-                  <div class="metric-value">3</div>
-                  <div class="metric-detail">Cursos agendados para a semana.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-documentos" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Documentos</h2>
-                <div class="metric-detail">Arquivos de contratos, relatórios e fichas.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Contratos</h2>
-                  <div class="metric-value">14</div>
-                  <div class="metric-detail">Documentos prontos para assinatura.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Relatórios</h2>
-                  <div class="metric-value">9</div>
-                  <div class="metric-detail">Relatórios enviados e pendentes.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-proc-operacional" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Proc. Operacional</h2>
-                <div class="metric-detail">Fluxos e processos internos do time.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Processos ativos</h2>
-                  <div class="metric-value">7</div>
-                  <div class="metric-detail">Operações em andamento.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Alertas</h2>
-                  <div class="metric-value">2</div>
-                  <div class="metric-detail">Pendências internas importantes.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-envios-whatsapp" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Envios WhatsApp</h2>
-                <div class="metric-detail">Mensagens e campanhas enviadas ao público.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Campanhas enviadas</h2>
-                  <div class="metric-value">21</div>
-                  <div class="metric-detail">Mensagens enviadas esta semana.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Taxa de abertura</h2>
-                  <div class="metric-value">87%</div>
-                  <div class="metric-detail">Engajamento com entregas recentes.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="section-usuarios" class="dashboard-section">
-              <div class="dashboard-card small">
-                <h2>Usuários</h2>
-                <div class="metric-detail">Gestão de contas, permissões e acesso.</div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="dashboard-card">
-                  <h2>Usuários ativos</h2>
-                  <div class="metric-value">12</div>
-                  <div class="metric-detail">Acessaram o sistema nas últimas 24h.</div>
-                </div>
-                <div class="dashboard-card">
-                  <h2>Novos cadastros</h2>
-                  <div class="metric-value">3</div>
-                  <div class="metric-detail">Contas criadas nos últimos 7 dias.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="login-actions">
-          <button id="logout-button" class="btn-primary" style="background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);box-shadow:none;">Sair</button>
-        </div>
-      </div>
-    </section>
   </main>
 
   <script>
