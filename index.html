@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foyer Imóveis — Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Ícones FontAwesome para o menu lateral (CDN correto) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6OgXw7b6T0K0b6qYhM6u0Q4K1eZ5Qk3hQf6Z1q3y3Qv2M0o1k9e6Qq0n8y1p4s5t6r7u8v9w0x1y2z3a4b5c==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+  /* Variáveis Globais de Cores (Azul Marinho Profundo e Dourado) */
+  :root {
+    --bg-main: #060b13;       /* Fundo geral */
+    --bg-sidebar: #091220;    /* Barra lateral */
+    --bg-card: #0e1b2f;       /* Blocos/cards */
+    --gold: #B8902A;          /* Dourado principal */
+    --gold-light: #F0D080;    /* Dourado claro brilhante */
+    --gold-border: rgba(184, 144, 42, 0.25);
+    --text-main: #ffffff;     /* Texto branco */
+    --text-muted: #8b9bb4;    /* Texto secundário azul acinzentado */
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* LAYOUT PRINCIPAL */
+  .sidebar {
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--gold-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+  }
+
+  .main-content {
+    margin-left: 260px;
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* CONTROLE DE EXIBIÇÃO DE PÁGINAS (SPA) */
+  .app-page {
+    display: none; /* Oculta as páginas por padrão */
+    flex-direction: column;
+    gap: 30px;
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  .app-page.page-active {
+    display: flex; /* Exibe apenas a página selecionada */
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SIDEBAR / MENU LATERAL */
+  .brand {
+    padding: 25px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .brand h1 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    color: var(--gold-light);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+
+  .brand span {
+    font-size: 9px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .menu-section {
+    padding: 20px 0;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .menu-label {
+    font-size: 10px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 10px 24px;
+    font-weight: 700;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 24px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .menu-item:hover, .menu-item.active {
+    color: var(--text-main);
+    background: linear-gradient(90deg, rgba(184, 144, 42, 0.15) 0%, transparent 100%);
+    border-left: 3px solid var(--gold);
+    padding-left: 21px;
+  }
+
+  .menu-item i {
+    width: 18px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .sidebar-user {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--gold);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid var(--gold-light);
+  }
+
+  .user-info .user-name {
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 700;
+  }
+
+  .user-info .user-role {
+    font-size: 11px;
+    color: var(--gold-light);
+  }
+
+  /* HEADERS DAS PÁGINAS */
+  .header-dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 20px;
+  }
+
+  .welcome-text h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .welcome-text p {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* FILTRO DE PERÍODO */
+  .period-filter {
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--gold-border);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .filter-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+
+  .date-inputs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .date-field label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .date-field input {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    outline: none;
+  }
+
+  .btn-update {
+    background-color: var(--gold);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-update:hover {
+    background-color: #96731e;
+  }
+
+  /* METRICAS / CARDS GRIDES */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .card-metric {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+  }
+
+  .card-metric:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold-border);
+  }
+
+  .card-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .card-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* SEÇÃO DE RANKING / TABELAS */
+  .ranking-section {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+  }
+
+  .ranking-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .ranking-table th {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.05em;
+  }
+
+  .ranking-table td {
+    padding: 14px 15px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-main);
+  }
+
+  .ranking-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  .badge-position {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .pos-1 { background-color: var(--gold); color: #fff; }
+  .pos-2 { background-color: #8b9bb4; color: #060b13; }
+  .pos-3 { background-color: #cd7f32; color: #fff; }
+  .pos-other { color: var(--text-muted); }
+
+  .rh-placeholder {
+    background-color: var(--bg-card);
+    border: 1px dashed var(--gold-border);
+    border-radius: 12px;
+    padding: 60px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN DE CARREGAMENTO -->
+<div id="app-splash" style="position:fixed;inset:0;z-index:99999;background:#060b13;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
+  <div class="sp-particles" id="sp-particles"></div>
+  <div class="sp-glow" style="position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(184,144,42,0.12) 0%,transparent 70%);"></div>
+  
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;margin-bottom:36px;">
+    <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#F0D080;letter-spacing:0.12em;">FOYER</div>
+    <div style="font-size:10px;color:rgba(184,144,42,0.5);letter-spacing:0.4em;text-transform:uppercase;margin-top:6px;">Imóveis · Sistema de Gestão</div>
+  </div>
+  
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;">
+    <div style="height:2px;background:rgba(184,144,42,0.15);border-radius:2px;width:220px;overflow:hidden;">
+      <div style="height:100%;width:50%;background:var(--gold);border-radius:2px;"></div>
+    </div>
+    <div class="sp-status" style="font-size:10px;color:rgba(184,144,42,0.5);letter-spacing:0.15em;text-transform:uppercase;">Carregando dados...</div>
+  </div>
+</div>
+
+<!-- BARRA LATERAL (SIDEBAR) -->
+<aside class="sidebar">
+  <div class="brand">
+    <h1>FOYER</h1>
+    <span>Imóveis</span>
+  </div>
+  
+  <nav class="menu-section" aria-label="Menu principal">
+    <div class="menu-label">Módulos</div>
+    <div class="menu-item active" data-page="page-dashboard" aria-current="page"><i class="fa-solid fa-chart-pie"></i> Dashboard</div>
+    <div class="menu-item" data-page="page-properties"><i class="fa-solid fa-building"></i> Imóveis</div>
+    <div class="menu-item" data-page="page-leads"><i class="fa-solid fa-users"></i> Leads</div>
+    <div class="menu-item" data-page="page-reports"><i class="fa-solid fa-file-lines"></i> Relatórios</div>
+    <div class="menu-item" data-page="page-settings"><i class="fa-solid fa-gear"></i> Configurações</div>
+  </nav>
+
+  <div class="sidebar-user" role="status" aria-live="polite">
+    <div class="user-avatar">AR</div>
+    <div class="user-info">
+      <div class="user-name">Admin</div>
+      <div class="user-role">Administrador</div>
+    </div>
+  </div>
+  </aside>
+
+<main class="main-content">
+  <section id="page-dashboard" class="app-page page-active" aria-labelledby="dash-title">
+    <header class="header-dashboard">
+      <div class="welcome-text">
+        <h2 id="dash-title" tabindex="-1">Bem-vindo ao painel</h2>
+        <p>Visão geral das métricas principais</p>
+      </div>
+      <div class="period-filter">
+        <div>
+          <div class="filter-title">Período</div>
+        </div>
+        <div class="date-inputs">
+          <div class="date-field">
+            <label for="from-date">De</label>
+            <input id="from-date" type="date">
+          </div>
+          <div class="date-field">
+            <label for="to-date">Até</label>
+            <input id="to-date" type="date">
+          </div>
+          <button class="btn-update">Atualizar</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="metrics-grid">
+      <div class="card-metric">
+        <div class="card-label">Novos leads</div>
+        <div class="card-value">124</div>
+        <div class="card-sub">Últimos 30 dias</div>
+      </div>
+      <div class="card-metric">
+        <div class="card-label">Visitas</div>
+        <div class="card-value">3.2k</div>
+        <div class="card-sub">Últimos 30 dias</div>
+      </div>
+      <div class="card-metric">
+        <div class="card-label">Negócios</div>
+        <div class="card-value">18</div>
+        <div class="card-sub">Fechados</div>
+      </div>
+      <div class="card-metric">
+        <div class="card-label">Receita</div>
+        <div class="card-value">R$ 72.400</div>
+        <div class="card-sub">Mês atual</div>
+      </div>
+    </div>
+
+    <div class="ranking-section">
+      <h3>Top corretores</h3>
+      <div class="rh-placeholder">Tabela de ranking (placeholder)</div>
+    </div>
+  </section>
+
+  <section id="page-properties" class="app-page" aria-labelledby="props-title">
+    <h2 id="props-title" tabindex="-1">Imóveis</h2>
+    <div class="rh-placeholder">Lista de imóveis</div>
+  </section>
+
+  <section id="page-leads" class="app-page" aria-labelledby="leads-title">
+    <h2 id="leads-title" tabindex="-1">Leads</h2>
+    <div class="rh-placeholder">Lista de leads</div>
+  </section>
+
+  <section id="page-reports" class="app-page" aria-labelledby="reports-title">
+    <h2 id="reports-title" tabindex="-1">Relatórios</h2>
+    <div class="rh-placeholder">Relatórios e exportações</div>
+  </section>
+
+  <section id="page-settings" class="app-page" aria-labelledby="settings-title">
+    <h2 id="settings-title" tabindex="-1">Configurações</h2>
+    <div class="rh-placeholder">Preferências do sistema</div>
+  </section>
+
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Esconder splash após carregar
+    setTimeout(function () {
+      var sp = document.getElementById('app-splash');
+      if (sp) {
+        sp.style.transition = 'opacity 0.35s ease';
+        sp.style.opacity = '0';
+        sp.style.pointerEvents = 'none';
+        setTimeout(function () { sp.remove(); }, 400);
+      }
+    }, 700);
+
+    // Navegação SPA simples
+    function showPage(id) {
+      document.querySelectorAll('.app-page').forEach(function (p) { p.classList.remove('page-active'); });
+      var el = document.getElementById(id);
+      if (el) el.classList.add('page-active');
+    }
+
+    document.querySelectorAll('.menu-item[data-page]').forEach(function (item) {
+      item.addEventListener('click', function () {
+        document.querySelectorAll('.menu-item').forEach(function (i) { i.classList.remove('active'); });
+        item.classList.add('active');
+        var page = item.getAttribute('data-page');
+        showPage(page);
+        var heading = document.querySelector('#' + page + ' h2');
+        if (heading) heading.focus();
+      });
+    });
+
+    // Garantir página padrão
+    showPage('page-dashboard');
+  });
+</script>
+
+</body>
+</html>
