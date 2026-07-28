@@ -418,6 +418,9 @@
       <div class="user-name">Admin</div>
       <div class="user-role">Administrador</div>
     </div>
+    <div style="margin-left:auto;margin-right:16px;">
+      <button id="login-btn" class="btn-update" style="padding:6px 10px;font-size:12px;">Entrar</button>
+    </div>
   </div>
   </aside>
 
@@ -531,6 +534,88 @@
     // Garantir página padrão
     showPage('page-dashboard');
   });
+</script>
+
+<!-- Login modal + logic -->
+<div id="login-modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,11,19,0.6);z-index:10000;">
+  <div style="background:var(--bg-card);padding:20px;border-radius:10px;min-width:320px;">
+    <h3 style="margin-bottom:10px;color:var(--gold-light)">Entrar</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <input id="login-user" placeholder="Usuário" style="padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--bg-card);color:#fff">
+      <input id="login-pass" type="password" placeholder="Senha" style="padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--bg-card);color:#fff">
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button id="login-cancel" class="btn-update" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text-main);">Cancelar</button>
+        <button id="login-submit" class="btn-update">Entrar</button>
+      </div>
+      <div id="login-error" style="color:#ff6b6b;font-size:13px;display:none;margin-top:6px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var loginBtn = document.getElementById('login-btn');
+  var modal = document.getElementById('login-modal');
+  var cancel = document.getElementById('login-cancel');
+  var submit = document.getElementById('login-submit');
+  var userInput = document.getElementById('login-user');
+  var passInput = document.getElementById('login-pass');
+  var err = document.getElementById('login-error');
+
+  function isAuthed(){ return sessionStorage.getItem('foyer_authed') === '1'; }
+
+  function updateLoginUI(){
+    if(isAuthed()){
+      loginBtn.textContent = 'Sair';
+    } else {
+      loginBtn.textContent = 'Entrar';
+    }
+  }
+
+  function openModal(){ err.style.display='none'; userInput.value=''; passInput.value=''; modal.style.display='flex'; userInput.focus(); }
+  function closeModal(){ modal.style.display='none'; }
+
+  loginBtn.addEventListener('click', function(){
+    if(isAuthed()){
+      sessionStorage.removeItem('foyer_authed');
+      updateLoginUI();
+      location.reload();
+      return;
+    }
+    openModal();
+  });
+
+  cancel.addEventListener('click', function(e){ e.preventDefault(); closeModal(); });
+
+  submit.addEventListener('click', function(e){
+    e.preventDefault();
+    err.style.display='none';
+    var u = userInput.value.trim();
+    var p = passInput.value;
+    if(!u || !p){ err.textContent='Preencha usuário e senha.'; err.style.display='block'; return; }
+
+    var headers = new Headers();
+    headers.set('Authorization','Basic '+btoa(u+':'+p));
+
+    fetch(window.location.pathname || '/', { method: 'GET', headers: headers, cache: 'no-store' })
+      .then(function(res){
+        if(res.status === 200){
+          sessionStorage.setItem('foyer_authed','1');
+          closeModal();
+          updateLoginUI();
+        } else if(res.status === 401){
+          err.textContent = 'Credenciais inválidas.'; err.style.display='block';
+        } else {
+          err.textContent = 'Resposta: ' + res.status; err.style.display='block';
+        }
+      }).catch(function(errx){
+        err.textContent = 'Erro de conexão.'; err.style.display='block';
+      });
+  });
+
+  // init
+  updateLoginUI();
+})();
 </script>
 
 </body>
