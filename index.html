@@ -98,6 +98,380 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.05));
     }
 
+    .dashboard-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 32px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .topbar-brand .brand-title {
+      font-size: clamp(2rem, 2.5vw, 2.6rem);
+      color: var(--gold);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .topbar-brand .brand-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .topbar-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: default;
+    }
+
+    .topbar-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .topbar-icon:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .topbar-logout {
+      border-color: rgba(184, 144, 42, 0.22);
+      background: linear-gradient(90deg, rgba(184,144,42,0.16), rgba(255,255,255,0.04));
+      color: var(--gold);
+    }
+
+    .dashboard-shell {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 24px;
+      padding: 28px 32px 32px;
+    }
+
+    .dashboard-sidebar {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 26px;
+      display: grid;
+      gap: 22px;
+      min-height: calc(100vh - 212px);
+    }
+
+    .sidebar-header {
+      display: grid;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .sidebar-menu {
+      display: grid;
+      gap: 12px;
+    }
+
+    .sidebar-menu button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .sidebar-menu button:hover {
+      transform: translateX(2px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .sidebar-menu button.active {
+      background: rgba(184,144,42,0.18);
+      border-color: rgba(184,144,42,0.3);
+      color: var(--gold);
+    }
+
+    .sidebar-profile {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: auto;
+    }
+
+    .sidebar-profile span {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(184,144,42,0.2);
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .sidebar-profile strong {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar-profile small {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .dashboard-content {
+      display: grid;
+      gap: 24px;
+    }
+
+    .dashboard-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .dashboard-header-bar h1 {
+      font-size: clamp(2.8rem, 4vw, 4.8rem);
+      margin: 0;
+      color: var(--text);
+    }
+
+    .dashboard-grid-top {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 24px;
+    }
+
+    .banner-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(184,144,42,0.18), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 32px;
+      padding: 32px;
+      overflow: hidden;
+      display: grid;
+      gap: 18px;
+      min-height: 280px;
+    }
+
+    .banner-card::before {
+      content: '';
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+
+    .banner-card .panel-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: var(--gold-soft);
+      text-transform: uppercase;
+    }
+
+    .banner-card h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 4vw, 4.4rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .banner-card p {
+      color: var(--text-muted);
+      max-width: 58ch;
+      margin: 0;
+      line-height: 1.8;
+    }
+
+    .banner-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: auto;
+    }
+
+    .live-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(184,144,42,0.16);
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .period-panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 26px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .period-panel .panel-label {
+      color: var(--gold-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.78rem;
+    }
+
+    .period-title {
+      font-size: 2.5rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .period-fields {
+      display: grid;
+      gap: 14px;
+    }
+
+    .period-fields label {
+      display: grid;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .period-fields input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .period-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .metric-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      min-height: 170px;
+    }
+
+    .metric-caption {
+      color: rgba(255,255,255,0.72);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.78rem;
+    }
+
+    .metric-card .metric-value {
+      font-size: 2.2rem;
+      color: var(--gold);
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    .metric-note {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .bottom-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .bottom-cards .dashboard-card {
+      min-height: 180px;
+    }
+
+    @media (max-width: 1120px) {
+      .dashboard-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-row,
+      .bottom-cards,
+      .dashboard-grid-top {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
     .login-hero {
       background: linear-gradient(160deg, rgba(20, 108, 189, 0.18), transparent 55%),
                   linear-gradient(180deg, rgba(255,255,255,0.04), transparent 35%);
@@ -794,162 +1168,128 @@
   </main>
 
   <main id="dashboard-page" class="dashboard-frame hidden" aria-label="Painel Foyer Imóveis">
-    <section class="login-hero">
-      <div class="hero-copy">
-        <div>
-          <div class="brand-title">FOYER</div>
-          <div class="brand-sub">Imóveis — Painel</div>
-        </div>
-        <p>Você está logado como <strong>admin</strong>. Abaixo estão os indicadores principais do sistema com um visual mais próximo do painel real.</p>
+    <div class="dashboard-topbar">
+      <div class="topbar-left">
+        <div class="brand-title">FOYER</div>
+        <div class="brand-sub">Imóveis</div>
       </div>
-    </section>
-    <section class="login-panel">
-      <div class="login-card">
-        <div>
-          <h1>Olá, admin</h1>
-          <p>Bem-vindo ao sistema Foyer Imóveis. Você já está autenticado e pode navegar pelo painel com as métricas principais.</p>
+      <div class="topbar-actions">
+        <button class="topbar-pill"><span>R</span><span>RAFAEL</span></button>
+        <button class="topbar-icon"><i class="fa-solid fa-bell"></i></button>
+        <button class="topbar-logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+        <button class="topbar-icon"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </div>
+
+    <div class="dashboard-shell">
+      <aside class="dashboard-sidebar" role="navigation" aria-label="Menu do painel">
+        <div class="sidebar-header">
+          <div class="brand-title">FOYER</div>
+          <div class="brand-sub">Imóveis</div>
+        </div>
+        <nav class="sidebar-menu">
+          <button type="button" class="active" data-section="overview"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+          <button type="button" data-section="dash-rh"><i class="fa-solid fa-people-group"></i> Dash RH</button>
+          <button type="button" data-section="agendamentos"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
+          <button type="button" data-section="financeiro"><i class="fa-solid fa-wallet"></i> Financeiro</button>
+          <button type="button" data-section="minha-carteira"><i class="fa-solid fa-suitcase"></i> Minha Carteira</button>
+          <button type="button" data-section="vendas-comissao"><i class="fa-solid fa-chart-line"></i> Vendas / Comissão</button>
+          <button type="button" data-section="treinamentos"><i class="fa-solid fa-chalkboard-user"></i> Treinamentos</button>
+          <button type="button" data-section="documentos"><i class="fa-solid fa-file-lines"></i> Documentos</button>
+          <button type="button" data-section="proc-operacional"><i class="fa-solid fa-gears"></i> Proc. Operacional</button>
+          <button type="button" data-section="envios-whatsapp"><i class="fa-brands fa-whatsapp"></i> Envios WhatsApp</button>
+          <button type="button" data-section="usuarios"><i class="fa-solid fa-user"></i> Usuários</button>
+        </nav>
+        <div class="sidebar-profile">
+          <span>R</span>
+          <div>
+            <strong>RAFAEL</strong>
+            <small>Diretor · Cristo Rei</small>
+          </div>
+        </div>
+      </aside>
+
+      <section class="dashboard-content">
+        <div class="dashboard-header-bar">
+          <h1>Dashboard</h1>
         </div>
 
-        <div class="dashboard-overview">
-          <span>Visão geral atualizada em tempo real</span>
-          <span><strong>Status:</strong> Autenticado</span>
-        </div>
-
-        <div class="dashboard-layout">
-          <aside class="dashboard-sidebar" role="tablist" aria-label="Menu do painel">
-            <button type="button" class="active" data-section="overview"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
-            <button type="button" data-section="dash-rh"><i class="fa-solid fa-people-group"></i> Dash RH</button>
-            <button type="button" data-section="agendamentos"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
-            <button type="button" data-section="financeiro"><i class="fa-solid fa-wallet"></i> Financeiro</button>
-            <button type="button" data-section="minha-carteira"><i class="fa-solid fa-suitcase"></i> Minha Carteira</button>
-            <button type="button" data-section="vendas-comissao"><i class="fa-solid fa-chart-line"></i> Vendas / Comissão</button>
-            <button type="button" data-section="treinamentos"><i class="fa-solid fa-chalkboard-user"></i> Treinamentos</button>
-            <button type="button" data-section="documentos"><i class="fa-solid fa-file-lines"></i> Documentos</button>
-            <button type="button" data-section="proc-operacional"><i class="fa-solid fa-gears"></i> Proc. Operacional</button>
-            <button type="button" data-section="envios-whatsapp"><i class="fa-brands fa-whatsapp"></i> Envios WhatsApp</button>
-            <button type="button" data-section="usuarios"><i class="fa-solid fa-user"></i> Usuários</button>
-          </aside>
-
-          <div class="dashboard-sections">
-            <div id="section-overview" class="dashboard-section active">
-              <div class="dashboard-panel">
-                <div class="dashboard-header">
-                  <div>
-                    <div class="panel-label">Dashboard Comercial</div>
-                    <h1>Resultado de vendas em tempo real</h1>
-                    <p class="subtitle">Foco no mês atual por padrão. Use o período personalizado para analisar qualquer janela de datas.</p>
-                  </div>
-                  <div class="panel-chip"><span></span>Ao vivo</div>
-                </div>
-
-                <div class="summary-board">
-                  <div class="summary-card">
-                    <div class="summary-head">
-                      <div>
-                        <div class="panel-label">Visão geral</div>
-                        <h2>Performance residencial</h2>
-                      </div>
-                      <span>Atualizado há 2 minutos</span>
-                    </div>
-                    <div class="summary-body">
-                      <div class="summary-chart">Gráfico de tendência</div>
-                      <div class="summary-values">
-                        <div class="summary-value">
-                          <span>Meta do mês</span>
-                          <strong>R$ --</strong>
-                        </div>
-                        <div class="summary-value">
-                          <span>Receita prevista</span>
-                          <strong>R$ --</strong>
-                        </div>
-                        <div class="summary-value">
-                          <span>Taxa de conversão</span>
-                          <strong>--%</strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="overview-top">
-                  <div class="hero-card">
-                    <div class="panel-label">Dashboard Comercial</div>
-                    <h2>Resultado de vendas em tempo real</h2>
-                    <p>Foco no mês atual por padrão. Use o período personalizado para analisar qualquer janela de datas.</p>
-                  </div>
-                  <div class="period-card">
-                    <div class="panel-label">Período</div>
-                    <div class="period-title">JULHO</div>
-                    <div class="period-fields">
-                      <label>
-                        De
-                        <input type="text" placeholder="dd/mm/aaaa" disabled>
-                      </label>
-                      <label>
-                        Até
-                        <input type="text" placeholder="dd/mm/aaaa" disabled>
-                      </label>
-                    </div>
-                    <div class="period-actions">
-                      <button class="btn-secondary">Voltar ao mês atual</button>
-                      <button class="btn-primary">Atualizar agora</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="metrics-grid">
-                  <div class="metric-card">
-                    <div class="metric-card-header">
-                      <span>Número de vendas</span>
-                      <small>Último mês</small>
-                    </div>
-                    <div class="metric-value">--</div>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                  <div class="metric-card">
-                    <div class="metric-card-header">
-                      <span>VGV</span>
-                      <small>Previsto</small>
-                    </div>
-                    <div class="metric-value">R$ --</div>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                  <div class="metric-card">
-                    <div class="metric-card-header">
-                      <span>Ticket médio</span>
-                      <small>Meta</small>
-                    </div>
-                    <div class="metric-value">R$ --</div>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                  <div class="metric-card">
-                    <div class="metric-card-header">
-                      <span>Top corretor</span>
-                      <small>Status</small>
-                    </div>
-                    <div class="metric-value">--</div>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                </div>
-
-                <div class="dashboard-grid">
-                  <div class="dashboard-card">
-                    <h2>Ranking por VGV</h2>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                  <div class="dashboard-card">
-                    <h2>Produção Agrupada</h2>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                  <div class="dashboard-card">
-                    <h2>Visão por Unidade</h2>
-                    <div class="metric-empty">Sem dados disponíveis</div>
-                  </div>
-                </div>
-              </div>
+        <div class="dashboard-grid-top">
+          <article class="banner-card">
+            <div class="panel-label">Dashboard Comercial</div>
+            <h2>Resultado de vendas em tempo real</h2>
+            <p>Foco no mês atual por padrão. Use o período personalizado para analisar qualquer janela de datas.</p>
+            <div class="banner-footer">
+              <span class="live-chip"><i class="fa-solid fa-circle"></i> Ao vivo</span>
+              <span>Atualizado 00:42</span>
             </div>
+          </article>
 
-            <div id="section-dash-rh" class="dashboard-section">
+          <aside class="period-panel">
+            <div class="panel-label">Período</div>
+            <div class="period-title">JULHO</div>
+            <div class="period-fields">
+              <label>
+                De
+                <input type="text" placeholder="dd/mm/aaaa" disabled>
+              </label>
+              <label>
+                Até
+                <input type="text" placeholder="dd/mm/aaaa" disabled>
+              </label>
+            </div>
+            <div class="period-actions">
+              <button class="btn-secondary">Voltar ao mês atual</button>
+              <button class="btn-primary">Atualizar agora</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric-card">
+            <span class="metric-caption">Número de vendas</span>
+            <strong class="metric-value">18</strong>
+            <span class="metric-note">Somente vendas ativas</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-caption">VGV</span>
+            <strong class="metric-value">R$ 4.903.469</strong>
+            <span class="metric-note">Valor geral de vendas</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-caption">Ticket médio</span>
+            <strong class="metric-value">R$ 272.415</strong>
+            <span class="metric-note">VGV dividido por vendas</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-caption">Top corretor</span>
+            <strong class="metric-value">MICHAEL ...</strong>
+            <span class="metric-note">Maior VGV no período</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-caption">Top equipe</span>
+            <strong class="metric-value">SCHWANK...</strong>
+            <span class="metric-note">Maior VGV no período</span>
+          </div>
+        </div>
+
+        <div class="bottom-cards">
+          <div class="dashboard-card">
+            <h2>Ranking por VGV</h2>
+            <div class="metric-empty">Sem dados disponíveis</div>
+          </div>
+          <div class="dashboard-card">
+            <h2>Produção Agrupada</h2>
+            <div class="metric-empty">Sem dados disponíveis</div>
+          </div>
+          <div class="dashboard-card">
+            <h2>Visão por Unidade</h2>
+            <div class="metric-empty">Sem dados disponíveis</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
               <div class="dashboard-card small">
                 <h2>Dashboard RH</h2>
                 <div class="metric-detail">Resumo de equipe, presença e status de colaboradores.</div>
