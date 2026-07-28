@@ -2485,13 +2485,14 @@
       document.querySelectorAll('.btn-delete').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var idx = parseInt(btn.dataset.idx, 10);
-          if (confirm('Tem certeza que deseja excluir este usuário?')) {
+            if (confirm('Tem certeza que deseja excluir este usuário?')) {
             users.splice(idx, 1);
             // adjust page if needed
             if ((currentPage - 1) * pageSize >= users.length && currentPage > 1) {
               currentPage--;
             }
             updateUserCards();
+            saveUIState();
           }
         });
       });
@@ -2518,11 +2519,11 @@
     // Filter handlers: when filters change, reset to page 1 and refresh list
     ['filter-profile','filter-status','filter-unit','filter-team'].forEach(function(id) {
       var el = document.getElementById(id);
-      if (el) el.addEventListener('change', function() { currentPage = 1; updateUserCards(); });
+      if (el) el.addEventListener('change', function() { currentPage = 1; updateUserCards(); saveUIState(); });
     });
 
     var searchEl = document.getElementById('user-search');
-    if (searchEl) searchEl.addEventListener('input', function() { currentPage = 1; updateUserCards(); });
+    if (searchEl) searchEl.addEventListener('input', function() { currentPage = 1; updateUserCards(); saveUIState(); });
 
     function resetUserForm() {
       var form = document.getElementById('user-add-form');
@@ -2749,24 +2750,62 @@
 
       editIndex = null;
       updateUserCards();
+      saveUIState();
       closeUserModal();
     });
 
-    // Initialize dynamic profile options and pagination handlers
+    // Save/load UI state to localStorage
+    function saveUIState() {
+      var state = {
+        profile: document.getElementById('filter-profile') ? document.getElementById('filter-profile').value : '',
+        status: document.getElementById('filter-status') ? document.getElementById('filter-status').value : '',
+        unit: document.getElementById('filter-unit') ? document.getElementById('filter-unit').value : '',
+        team: document.getElementById('filter-team') ? document.getElementById('filter-team').value : '',
+        query: document.getElementById('user-search') ? document.getElementById('user-search').value : '',
+        pageSize: pageSize,
+        currentPage: currentPage
+      };
+      try { localStorage.setItem('foyer_users_state', JSON.stringify(state)); } catch (e) { /* ignore */ }
+    }
+
+    function loadUIState() {
+      try {
+        var raw = localStorage.getItem('foyer_users_state');
+        if (!raw) return;
+        var s = JSON.parse(raw);
+        if (!s) return;
+        if (s.pageSize) pageSize = parseInt(s.pageSize, 10) || pageSize;
+        if (s.currentPage) currentPage = parseInt(s.currentPage, 10) || currentPage;
+        // fill after profile options are populated
+        if (s.profile && document.getElementById('filter-profile')) document.getElementById('filter-profile').value = s.profile;
+        if (s.status && document.getElementById('filter-status')) document.getElementById('filter-status').value = s.status;
+        if (s.unit && document.getElementById('filter-unit')) document.getElementById('filter-unit').value = s.unit;
+        if (s.team && document.getElementById('filter-team')) document.getElementById('filter-team').value = s.team;
+        if (s.query !== undefined && document.getElementById('user-search')) document.getElementById('user-search').value = s.query;
+      } catch (e) {
+        return;
+      }
+    }
+
+    // Initialize dynamic profile options and restore UI state
     populateProfileOptions();
+    loadUIState();
 
     document.getElementById('page-prev').addEventListener('click', function() {
       if (currentPage > 1) {
         currentPage--;
         updateUserCards();
+        saveUIState();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
 
     document.getElementById('page-next').addEventListener('click', function() {
-      if (currentPage < totalPages()) {
+      var total = totalPages(applyFilters().length);
+      if (currentPage < total) {
         currentPage++;
         updateUserCards();
+        saveUIState();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
@@ -2775,6 +2814,7 @@
       pageSize = parseInt(this.value, 10) || 6;
       currentPage = 1;
       updateUserCards();
+      saveUIState();
     });
 
     // Floating nav buttons
@@ -2786,6 +2826,7 @@
     document.getElementById('float-down').addEventListener('click', function() { document.getElementById('page-next').click(); });
 
     updateUserCards();
+    saveUIState();
 
     if (isAuthed()) {
       showDashboard();
