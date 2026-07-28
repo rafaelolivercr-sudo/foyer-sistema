@@ -5,7 +5,7 @@ ARG ADMIN_USER=admin
 ARG ADMIN_PASS=admin
 
 # Install htpasswd tool and create htpasswd file
-RUN apk add --no-cache httpd-tools \
+RUN apk add --no-cache apache2-utils \
 	&& htpasswd -bc /etc/nginx/.htpasswd "$ADMIN_USER" "$ADMIN_PASS"
 
 # Copy nginx config and site
