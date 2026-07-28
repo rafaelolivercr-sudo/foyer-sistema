@@ -1560,6 +1560,64 @@
         gap: 12px;
       }
     }
+
+    /* Pagination and floating page nav */
+    .user-pagination {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+      padding: 12px 0;
+    }
+
+    .page-button {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .page-button[disabled] {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .page-info {
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .page-size-select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .floating-page-nav {
+      position: fixed;
+      right: 28px;
+      bottom: 80px;
+      display: grid;
+      gap: 8px;
+      z-index: 110;
+    }
+
+    .floating-page-nav button {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -1961,6 +2019,18 @@
               </div>
             </div>
 
+            <div class="user-pagination">
+              <div style="flex:1"></div>
+              <div class="page-info">Página <strong id="page-current">1</strong> de <strong id="page-total">1</strong></div>
+              <select id="page-size" class="page-size-select">
+                <option value="3">3 por página</option>
+                <option value="6" selected>6 por página</option>
+                <option value="12">12 por página</option>
+              </select>
+              <button id="page-prev" class="page-button">Anterior</button>
+              <button id="page-next" class="page-button">Próximo</button>
+            </div>
+
             <div id="user-list" class="dashboard-grid user-list-grid"></div>
           </div>
         </div>
@@ -2259,14 +2329,64 @@
       }
     ];
 
+    // Profiles and pagination
+    var profiles = ['Dono','Diretor','Gerente','Capitão','Corretor','RH','Marketing','Limpeza','Atendimento','Comercial'];
+    var currentPage = 1;
+    var pageSize = 6;
+
+    function populateProfileOptions() {
+      var filter = document.getElementById('filter-profile');
+      var modal = document.getElementById('new-user-profile');
+      if (!filter || !modal) return;
+      // preserve first option in filter (Todos os perfis)
+      var filterFirst = filter.querySelector('option');
+      filter.innerHTML = '';
+      filter.appendChild(filterFirst.cloneNode(true));
+      profiles.forEach(function(p) {
+        var o = document.createElement('option');
+        o.textContent = p;
+        filter.appendChild(o);
+      });
+
+      modal.innerHTML = '';
+      var first = document.createElement('option');
+      first.value = '';
+      first.textContent = 'Selecione...';
+      modal.appendChild(first);
+      profiles.forEach(function(p) {
+        var o = document.createElement('option');
+        o.textContent = p;
+        modal.appendChild(o);
+      });
+    }
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(users.length / pageSize));
+    }
+
     function updateUserCards() {
       var userList = document.getElementById('user-list');
-      userList.innerHTML = users.map(function(u, i) { return createUserCard(u, i); }).join('');
+      // ensure current page within bounds
+      var total = totalPages();
+      if (currentPage > total) currentPage = total;
+      if (currentPage < 1) currentPage = 1;
+
+      var start = (currentPage - 1) * pageSize;
+      var end = start + pageSize;
+      var pageUsers = users.slice(start, end);
+
+      userList.innerHTML = pageUsers.map(function(u, i) { return createUserCard(u, start + i); }).join('');
       document.getElementById('stat-total').textContent = users.length;
       document.getElementById('stat-active').textContent = users.filter(function(user) { return user.status === 'Ativo'; }).length;
       document.getElementById('stat-pending').textContent = users.filter(function(user) { return user.status === 'Pendente'; }).length;
       document.getElementById('stat-inactive').textContent = users.filter(function(user) { return user.status === 'Inativo'; }).length;
-      document.getElementById('stat-showing').textContent = users.length;
+      document.getElementById('stat-showing').textContent = pageUsers.length;
+
+      // pagination controls
+      document.getElementById('page-current').textContent = currentPage;
+      document.getElementById('page-total').textContent = total;
+      document.getElementById('page-prev').disabled = currentPage <= 1;
+      document.getElementById('page-next').disabled = currentPage >= total;
 
       // Attach handlers for edit/delete after rendering
       document.querySelectorAll('.btn-edit').forEach(function(btn) {
@@ -2281,6 +2401,10 @@
           var idx = parseInt(btn.dataset.idx, 10);
           if (confirm('Tem certeza que deseja excluir este usuário?')) {
             users.splice(idx, 1);
+            // adjust page if needed
+            if ((currentPage - 1) * pageSize >= users.length && currentPage > 1) {
+              currentPage--;
+            }
             updateUserCards();
           }
         });
@@ -2481,6 +2605,39 @@
       updateUserCards();
       closeUserModal();
     });
+
+    // Initialize dynamic profile options and pagination handlers
+    populateProfileOptions();
+
+    document.getElementById('page-prev').addEventListener('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        updateUserCards();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    document.getElementById('page-next').addEventListener('click', function() {
+      if (currentPage < totalPages()) {
+        currentPage++;
+        updateUserCards();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    document.getElementById('page-size').addEventListener('change', function() {
+      pageSize = parseInt(this.value, 10) || 6;
+      currentPage = 1;
+      updateUserCards();
+    });
+
+    // Floating nav buttons
+    var floatNav = document.createElement('div');
+    floatNav.className = 'floating-page-nav';
+    floatNav.innerHTML = '<button id="float-up" aria-label="Página anterior"><i class="fa-solid fa-chevron-up"></i></button><button id="float-down" aria-label="Próxima página"><i class="fa-solid fa-chevron-down"></i></button>';
+    document.body.appendChild(floatNav);
+    document.getElementById('float-up').addEventListener('click', function() { document.getElementById('page-prev').click(); });
+    document.getElementById('float-down').addEventListener('click', function() { document.getElementById('page-next').click(); });
 
     updateUserCards();
 
