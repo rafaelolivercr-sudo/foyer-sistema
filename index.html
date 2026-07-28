@@ -2446,8 +2446,8 @@
       });
     }
 
-    function totalPages() {
-      return Math.max(1, Math.ceil(users.length / pageSize));
+    function totalPages(filteredCount) {
+      return Math.max(1, Math.ceil((filteredCount || users.length) / pageSize));
     }
 
     function updateUserCards() {
@@ -2515,6 +2515,15 @@
       document.getElementById('user-modal-backdrop').setAttribute('aria-hidden', 'true');
     }
 
+    // Filter handlers: when filters change, reset to page 1 and refresh list
+    ['filter-profile','filter-status','filter-unit','filter-team'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('change', function() { currentPage = 1; updateUserCards(); });
+    });
+
+    var searchEl = document.getElementById('user-search');
+    if (searchEl) searchEl.addEventListener('input', function() { currentPage = 1; updateUserCards(); });
+
     function resetUserForm() {
       var form = document.getElementById('user-add-form');
       form.reset();
@@ -2575,61 +2584,84 @@
     document.getElementById('close-profile-btn').addEventListener('click', closeProfileModal);
     document.getElementById('profile-modal-backdrop').addEventListener('click', function(e) { if (e.target === this) closeProfileModal(); });
 
-    function normalizeInitials(name) {
-      return name.split(' ').filter(Boolean).map(function(part) { return part[0]; }).slice(0,2).join('').toUpperCase();
-    }
+    function applyFilters() {
+      var fProfile = document.getElementById('filter-profile').value || 'Todos os perfis';
+      var fStatus = document.getElementById('filter-status').value || 'Todos os status';
+      var fUnit = document.getElementById('filter-unit').value || 'Todas as unidades';
+      var fTeam = document.getElementById('filter-team').value || 'Todas as equipes';
+      var q = (document.getElementById('user-search').value || '').trim().toLowerCase();
 
-    document.getElementById('add-user').addEventListener('click', function() {
-      resetUserForm();
-      openUserModal();
-    });
-
-    document.getElementById('invite-user').addEventListener('click', function() {
-      var inviteEmail = window.prompt('Digite o e-mail do usuário a ser convidado:');
-      if (!inviteEmail) {
-        return;
-      }
-      var email = inviteEmail.trim();
-      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-        window.alert('Por favor, informe um e-mail válido para enviar o convite.');
-        return;
-      }
-      var newUser = {
-        name: 'Convite enviado',
-        email: email,
-        phone: '—',
-        profile: 'Colaborador',
-        status: 'Pendente',
-        unit: 'Centro',
-        team: '—',
-        bank: '—',
-        account: '—',
-        accountType: '—',
-        pixType: 'E-mail',
-        pixKey: email,
-        initials: email.slice(0, 2).toUpperCase()
-      };
-      users.unshift(newUser);
-      updateUserCards();
-      window.alert('Convite enviado para ' + email + '. Usuário adicionado como pendente.');
-    });
-
-    document.getElementById('close-user-modal').addEventListener('click', closeUserModal);
-    document.getElementById('cancel-user-btn').addEventListener('click', closeUserModal);
-    document.getElementById('user-modal-backdrop').addEventListener('click', function(event) {
-      if (event.target === this) {
-        closeUserModal();
-      }
-    });
-
-    function clearValidationErrors() {
-      document.querySelectorAll('.field-error').forEach(function(item) {
-        item.classList.remove('field-error');
-      });
-      document.querySelectorAll('.error-message').forEach(function(msg) {
-        msg.remove();
+      return users.filter(function(u) {
+        if (fProfile && fProfile !== 'Todos os perfis' && u.profile !== fProfile) return false;
+        if (fStatus && fStatus !== 'Todos os status' && u.status !== fStatus) return false;
+        if (fUnit && fUnit !== 'Todas as unidades' && u.unit !== fUnit) return false;
+        if (fTeam && fTeam !== 'Todas as equipes' && u.team && fTeam !== 'Todas as equipes' && u.team !== fTeam) {
+          // allow partial match for team
+          if (!u.team || u.team.toLowerCase().indexOf(fTeam.toLowerCase()) === -1) return false;
+        }
+        if (q) {
+          var hay = (u.name + ' ' + u.email + ' ' + (u.team || '')).toLowerCase();
+          if (hay.indexOf(q) === -1) return false;
+        }
+        return true;
       });
     }
+
+    function updateUserCards() {
+      var userList = document.getElementById('user-list');
+      var filtered = applyFilters();
+
+      // ensure current page within bounds
+      var total = totalPages(filtered.length);
+      if (currentPage > total) currentPage = total;
+      if (currentPage < 1) currentPage = 1;
+
+      var start = (currentPage - 1) * pageSize;
+      var end = start + pageSize;
+      var pageUsers = filtered.slice(start, end);
+
+      userList.innerHTML = pageUsers.map(function(u, i) { return createUserCard(u, start + i); }).join('');
+      document.getElementById('stat-total').textContent = users.length;
+      document.getElementById('stat-active').textContent = users.filter(function(user) { return user.status === 'Ativo'; }).length;
+      document.getElementById('stat-pending').textContent = users.filter(function(user) { return user.status === 'Pendente'; }).length;
+      document.getElementById('stat-inactive').textContent = users.filter(function(user) { return user.status === 'Inativo'; }).length;
+      document.getElementById('stat-showing').textContent = filtered.length;
+
+      // pagination controls
+      document.getElementById('page-current').textContent = currentPage;
+      document.getElementById('page-total').textContent = total;
+      document.getElementById('page-prev').disabled = currentPage <= 1;
+      document.getElementById('page-next').disabled = currentPage >= total;
+
+      // Attach handlers for edit/delete after rendering
+      document.querySelectorAll('.btn-edit').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx, 10);
+          openEditModal(idx);
+        });
+      });
+
+      document.querySelectorAll('.btn-delete').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx, 10);
+          if (confirm('Tem certeza que deseja excluir este usuário?')) {
+            users.splice(idx, 1);
+            // adjust page if needed
+            if ((currentPage - 1) * pageSize >= users.length && currentPage > 1) {
+              currentPage--;
+            }
+            updateUserCards();
+          }
+        });
+      });
+
+      document.querySelectorAll('.btn-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx, 10);
+          openProfileModal(idx);
+        });
+      });
+      }
 
     function showValidationError(field, message) {
       var container = field.closest('.form-field');
