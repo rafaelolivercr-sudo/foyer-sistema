@@ -2158,9 +2158,11 @@
       });
     });
 
-    function createUserCard(user) {
+    var editIndex = null;
+
+    function createUserCard(user, idx) {
       return `
-        <article class="user-card">
+        <article class="user-card" data-idx="${idx}">
           <header>
             <div class="user-avatar">${user.initials}</div>
             <div class="user-meta">
@@ -2207,10 +2209,10 @@
           </div>
           <footer>
             <div class="action-group">
-              <button class="btn-edit" type="button">Editar</button>
-              <button class="btn-delete" type="button">Excluir</button>
+              <button class="btn-edit" type="button" data-idx="${idx}">Editar</button>
+              <button class="btn-delete" type="button" data-idx="${idx}">Excluir</button>
             </div>
-            <button class="btn-toggle" type="button">Ver perfil</button>
+            <button class="btn-toggle" type="button" data-idx="${idx}">Ver perfil</button>
           </footer>
         </article>
       `;
@@ -2251,12 +2253,37 @@
 
     function updateUserCards() {
       var userList = document.getElementById('user-list');
-      userList.innerHTML = users.map(createUserCard).join('');
+      userList.innerHTML = users.map(function(u, i) { return createUserCard(u, i); }).join('');
       document.getElementById('stat-total').textContent = users.length;
       document.getElementById('stat-active').textContent = users.filter(function(user) { return user.status === 'Ativo'; }).length;
       document.getElementById('stat-pending').textContent = users.filter(function(user) { return user.status === 'Pendente'; }).length;
       document.getElementById('stat-inactive').textContent = users.filter(function(user) { return user.status === 'Inativo'; }).length;
       document.getElementById('stat-showing').textContent = users.length;
+
+      // Attach handlers for edit/delete after rendering
+      document.querySelectorAll('.btn-edit').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx, 10);
+          openEditModal(idx);
+        });
+      });
+
+      document.querySelectorAll('.btn-delete').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx, 10);
+          if (confirm('Tem certeza que deseja excluir este usuário?')) {
+            users.splice(idx, 1);
+            updateUserCards();
+          }
+        });
+      });
+
+      document.querySelectorAll('.btn-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx, 10);
+          alert('Abrir visualização de perfil para: ' + users[idx].name);
+        });
+      });
     }
 
     function openUserModal() {
@@ -2276,6 +2303,30 @@
       document.querySelectorAll('.pix-type-button').forEach(function(button) {
         button.classList.toggle('active', button.dataset.pixType === 'CPF');
       });
+      editIndex = null;
+      clearValidationErrors();
+    }
+
+    function openEditModal(idx) {
+      var user = users[idx];
+      if (!user) return;
+      editIndex = idx;
+      document.getElementById('new-user-name').value = user.name || '';
+      document.getElementById('new-user-email').value = user.email || '';
+      document.getElementById('new-user-phone').value = user.phone || '';
+      document.getElementById('new-user-profile').value = user.profile || '';
+      document.getElementById('new-user-status').value = user.status || '';
+      document.getElementById('new-user-unit').value = user.unit || '';
+      document.getElementById('new-user-team').value = user.team || '';
+      document.getElementById('new-user-bank').value = user.bank || '';
+      document.getElementById('new-user-agency').value = user.agency || '';
+      document.getElementById('new-user-account').value = user.account || '';
+      document.getElementById('new-user-account-type').value = user.accountType || '';
+      document.getElementById('new-user-pix').value = user.pixKey || '';
+      document.querySelectorAll('.pix-type-button').forEach(function(button) {
+        button.classList.toggle('active', button.dataset.pixType === (user.pixType || 'CPF'));
+      });
+      openUserModal();
     }
 
     function normalizeInitials(name) {
@@ -2408,11 +2459,19 @@
         pixType: document.querySelector('.pix-type-button.active').dataset.pixType,
         pixKey: document.getElementById('new-user-pix').value.trim(),
       };
-      user.initials = normalizeInitials(user.name);
-      users.unshift(user);
+      user.initials = normalizeInitials(user.name || user.email || 'US');
+
+      if (editIndex !== null && typeof editIndex !== 'undefined') {
+        users[editIndex] = user;
+        window.alert('Usuário atualizado com sucesso!');
+      } else {
+        users.unshift(user);
+        window.alert('Usuário cadastrado com sucesso!');
+      }
+
+      editIndex = null;
       updateUserCards();
       closeUserModal();
-      window.alert('Usuário cadastrado com sucesso!');
     });
 
     updateUserCards();
