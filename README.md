@@ -12,7 +12,8 @@ Deployment options
  Build and run locally:
 
  ```bash
- docker build -t foyer-sistema:latest .
+ # Example: set admin user/pass at build time (recommended)
+ docker build --build-arg ADMIN_USER=admin --build-arg ADMIN_PASS="s3nh4segura" -t foyer-sistema:latest .
  docker run -p 8080:80 foyer-sistema:latest
  # then open http://localhost:8080
  ```
