@@ -67,9 +67,8 @@
       background: rgba(10, 15, 24, 0.96);
       box-shadow: var(--shadow);
       display: grid;
-      grid-template-columns: minmax(300px, 360px) minmax(0, 1.45fr);
+      grid-template-rows: auto 1fr;
       gap: 0;
-      align-items: stretch;
     }
 
     .dashboard-frame .login-card {
@@ -176,9 +175,10 @@
 
     .dashboard-shell {
       display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
+      grid-template-columns: 1fr;
       gap: 24px;
       padding: 28px 32px 32px;
+      width: 100%;
     }
 
     .dashboard-sidebar {
@@ -1176,39 +1176,12 @@
       <div class="topbar-actions">
         <button class="topbar-pill"><span>R</span><span>RAFAEL</span></button>
         <button class="topbar-icon"><i class="fa-solid fa-bell"></i></button>
-        <button class="topbar-logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+        <button id="logout-button" class="topbar-logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
         <button class="topbar-icon"><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
     </div>
 
     <div class="dashboard-shell">
-      <aside class="dashboard-sidebar" role="navigation" aria-label="Menu do painel">
-        <div class="sidebar-header">
-          <div class="brand-title">FOYER</div>
-          <div class="brand-sub">Imóveis</div>
-        </div>
-        <nav class="sidebar-menu">
-          <button type="button" class="active" data-section="overview"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
-          <button type="button" data-section="dash-rh"><i class="fa-solid fa-people-group"></i> Dash RH</button>
-          <button type="button" data-section="agendamentos"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
-          <button type="button" data-section="financeiro"><i class="fa-solid fa-wallet"></i> Financeiro</button>
-          <button type="button" data-section="minha-carteira"><i class="fa-solid fa-suitcase"></i> Minha Carteira</button>
-          <button type="button" data-section="vendas-comissao"><i class="fa-solid fa-chart-line"></i> Vendas / Comissão</button>
-          <button type="button" data-section="treinamentos"><i class="fa-solid fa-chalkboard-user"></i> Treinamentos</button>
-          <button type="button" data-section="documentos"><i class="fa-solid fa-file-lines"></i> Documentos</button>
-          <button type="button" data-section="proc-operacional"><i class="fa-solid fa-gears"></i> Proc. Operacional</button>
-          <button type="button" data-section="envios-whatsapp"><i class="fa-brands fa-whatsapp"></i> Envios WhatsApp</button>
-          <button type="button" data-section="usuarios"><i class="fa-solid fa-user"></i> Usuários</button>
-        </nav>
-        <div class="sidebar-profile">
-          <span>R</span>
-          <div>
-            <strong>RAFAEL</strong>
-            <small>Diretor · Cristo Rei</small>
-          </div>
-        </div>
-      </aside>
-
       <section class="dashboard-content">
         <div class="dashboard-header-bar">
           <h1>Dashboard</h1>
