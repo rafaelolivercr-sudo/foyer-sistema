@@ -1875,6 +1875,7 @@
                   <p>Cadastre e gerencie vendas aqui.</p>
                 </div>
                 <div class="user-actions">
+                  <button id="export-sales" class="btn-secondary"><i class="fa-solid fa-file-export"></i> Exportar vendas</button>
                   <button id="add-sale" class="btn-primary"><i class="fa-solid fa-plus"></i> Nova venda</button>
                 </div>
               </div>
@@ -1990,6 +1991,7 @@
                   <p>Usuários do sistema</p>
                 </div>
                 <div class="user-actions">
+                  <button id="export-users" class="btn-secondary"><i class="fa-solid fa-file-export"></i> Exportar usuários</button>
                   <button id="invite-user" class="btn-secondary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Convidar usuário</button>
                   <button id="add-user" class="btn-primary"><i class="fa-solid fa-plus"></i> Novo usuário</button>
                 </div>
@@ -2331,6 +2333,7 @@
             <div class="form-field">
               <label for="sale-commission">Comissão (%)</label>
               <input id="sale-commission" name="commission" type="number" step="0.1" placeholder="Percentual de comissão">
+              <div id="sale-commission-calc" style="font-size:12px;color:var(--muted);margin-top:6px;">—</div>
             </div>
           </div>
         </div>
@@ -2762,6 +2765,12 @@
       if (!container) return;
       // apply filters
       var filtered = applySaleFilters();
+      // sort by date desc if date present
+      filtered.sort(function(a,b){
+        var da = a.date ? Date.parse(a.date) : 0;
+        var db = b.date ? Date.parse(b.date) : 0;
+        return db - da;
+      });
       var total = Math.max(1, Math.ceil(filtered.length / salesPageSize));
       if (salesCurrentPage > total) salesCurrentPage = total;
       if (salesCurrentPage < 1) salesCurrentPage = 1;
@@ -2783,7 +2792,7 @@
 
       // attach handlers
       document.querySelectorAll('.btn-edit-sale').forEach(function(btn){ btn.addEventListener('click', function(){ openSaleModal(parseInt(btn.dataset.idx,10)); }); });
-      document.querySelectorAll('.btn-delete-sale').forEach(function(btn){ btn.addEventListener('click', function(){ var i = parseInt(btn.dataset.idx,10); if (confirm('Excluir venda?')) { sales.splice(i,1); saveSales(); renderSalesList(); } }); });
+      document.querySelectorAll('.btn-delete-sale').forEach(function(btn){ btn.addEventListener('click', function(){ var i = parseInt(btn.dataset.idx,10); if (confirm('Excluir venda?')) { var deleted = sales.splice(i,1)[0]; saveSales(); renderSalesList(); showUndoToast('sale', deleted, i); } }); });
 
       // wire pager controls
       var prev = document.getElementById('sale-page-prev');
@@ -2882,9 +2891,76 @@
       closeSaleModal();
     });
 
+    // export helpers
+    function toCSV(rows, columns) {
+      var header = columns.join(',') + '\n';
+      var body = rows.map(function(r){ return columns.map(function(c){ var v = r[c]===undefined? '': String(r[c]).replace(/"/g,'""'); return '"'+v+'"'; }).join(','); }).join('\n');
+      return header + body;
+    }
+
+    function download(filename, text) {
+      var a = document.createElement('a');
+      a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(text);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    document.getElementById('export-users') && document.getElementById('export-users').addEventListener('click', function(){
+      var cols = ['name','email','phone','profile','status','unit','team'];
+      var csv = toCSV(users, cols);
+      download('users.csv', csv);
+    });
+
+    document.getElementById('export-sales') && document.getElementById('export-sales').addEventListener('click', function(){
+      var cols = ['buyer','seller','value','date','status','commission','commissionValue'];
+      var csv = toCSV(sales, cols);
+      download('sales.csv', csv);
+    });
+
     // initialize sales and render
     loadSales();
     renderSalesList();
+
+    // --- Input masks and helpers ---
+    function formatPhoneInput(v) {
+      var d = v.replace(/\D/g,'');
+      if (d.length <= 10) {
+        return d.replace(/(\d{2})(\d{4})(\d{0,4})/, function(m,a,b,c){ return '('+a+') '+b+(c?'-'+c:''); });
+      }
+      return d.replace(/(\d{2})(\d{5})(\d{0,4})/, function(m,a,b,c){ return '('+a+') '+b+(c?'-'+c:''); });
+    }
+
+    var phoneInput = document.getElementById('new-user-phone');
+    if (phoneInput) phoneInput.addEventListener('input', function(){ var pos = this.selectionStart; this.value = formatPhoneInput(this.value); });
+
+    // commission calc in modal
+    function updateCommissionCalc() {
+      var v = parseFloat(String(document.getElementById('sale-value').value).replace(',','.')) || 0;
+      var p = parseFloat(String(document.getElementById('sale-commission').value).replace(',','.')) || 0;
+      var el = document.getElementById('sale-commission-calc');
+      if (!el) return;
+      if (!p) { el.textContent = '—'; return; }
+      el.textContent = 'Comissão estimada: ' + formatCurrency(v * (p/100));
+    }
+    var saleValueEl = document.getElementById('sale-value');
+    var saleCommissionEl = document.getElementById('sale-commission');
+    if (saleValueEl) saleValueEl.addEventListener('input', updateCommissionCalc);
+    if (saleCommissionEl) saleCommissionEl.addEventListener('input', updateCommissionCalc);
+
+    // Undo toast for deletions
+    function showUndoToast(kind, item, index) {
+      var id = 'undo-toast-'+Date.now();
+      var div = document.createElement('div');
+      div.id = id;
+      div.style = 'position:fixed;right:16px;bottom:16px;background:#222;color:#fff;padding:10px 14px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.2);z-index:9999;';
+      div.innerHTML = '<span>Item excluído</span> <button style="margin-left:8px;padding:6px 8px;border:none;background:#444;color:#fff;border-radius:4px;cursor:pointer">Desfazer</button>';
+      document.body.appendChild(div);
+      var btn = div.querySelector('button');
+      var timeout = setTimeout(function(){ if (div.parentNode) div.parentNode.removeChild(div); }, 6000);
+      btn.addEventListener('click', function(){ clearTimeout(timeout); if (kind === 'user') { users.splice(index,0,item); saveUsers(); updateUserCards(); saveUIState(); } else if (kind === 'sale') { sales.splice(index,0,item); saveSales(); renderSalesList(); } if (div.parentNode) div.parentNode.removeChild(div); });
+    }
 
     // Period buttons (simple handlers)
     var periodBack = document.querySelector('.period-actions .btn-secondary');
@@ -2953,7 +3029,7 @@
         btn.addEventListener('click', function() {
           var idx = parseInt(btn.dataset.idx, 10);
           if (confirm('Tem certeza que deseja excluir este usuário?')) {
-            users.splice(idx, 1);
+            var deleted = users.splice(idx, 1)[0];
             // adjust page if needed
             if ((currentPage - 1) * pageSize >= users.length && currentPage > 1) {
               currentPage--;
@@ -2961,6 +3037,7 @@
             saveUsers();
             updateUserCards();
             saveUIState();
+            showUndoToast('user', deleted, idx);
           }
         });
       });
