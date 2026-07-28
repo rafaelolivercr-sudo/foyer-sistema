@@ -58,13 +58,44 @@
       grid-template-columns: 1.2fr 1fr;
     }
 
-    .login-hero,
-    .login-panel {
-      padding: 48px;
+    .dashboard-frame {
+      width: min(1380px, 100%);
+      min-height: calc(100vh - 40px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(10, 15, 24, 0.96);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: minmax(300px, 360px) minmax(0, 1.2fr);
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .dashboard-frame .login-card {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dashboard-frame .login-hero,
+    .dashboard-frame .login-panel {
+      padding: 38px 36px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 28px;
+    }
+
+    .dashboard-frame .login-hero {
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(160deg, rgba(20, 108, 189, 0.18), transparent 55%),
+                  linear-gradient(180deg, rgba(255,255,255,0.04), transparent 35%);
+    }
+
+    .dashboard-frame .login-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.05));
     }
 
     .login-hero {
@@ -311,8 +342,8 @@
 
     .dashboard-layout {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
-      gap: 20px;
+      grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+      gap: 22px;
       margin-top: 24px;
       align-items: start;
     }
@@ -806,7 +837,7 @@
     </section>
   </main>
 
-  <main id="dashboard-page" class="login-frame hidden" aria-label="Painel Foyer Imóveis">
+  <main id="dashboard-page" class="dashboard-frame hidden" aria-label="Painel Foyer Imóveis">
     <section class="login-hero">
       <div class="hero-copy">
         <div>
