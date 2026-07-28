@@ -1878,7 +1878,31 @@
                   <button id="add-sale" class="btn-primary"><i class="fa-solid fa-plus"></i> Nova venda</button>
                 </div>
               </div>
-              <div id="sales-list" style="margin-top:12px;"></div>
+              <div style="margin-top:12px;">
+                <div class="users-filters">
+                  <div class="users-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="sale-search" type="text" placeholder="Buscar por comprador, corretor ou data...">
+                  </div>
+                  <div class="users-filter-row">
+                    <select id="sale-filter-status">
+                      <option>Todos os status</option>
+                      <option>Concluída</option>
+                      <option>Em negociação</option>
+                      <option>Perdida</option>
+                    </select>
+                    <select id="sale-page-size" class="page-size-select">
+                      <option value="5">5 por página</option>
+                      <option value="10">10 por página</option>
+                      <option value="20">20 por página</option>
+                    </select>
+                    <button id="sale-page-prev" class="page-button">Anterior</button>
+                    <span class="page-indicator"><span id="sale-page-current">1</span>/<span id="sale-page-total">1</span></span>
+                    <button id="sale-page-next" class="page-button">Próximo</button>
+                  </div>
+                </div>
+                <div id="sales-list-container"></div>
+              </div>
             </div>
           </div>
 
@@ -2486,6 +2510,22 @@
       }
     ];
 
+    // Persist users to localStorage
+    function loadUsers() {
+      try {
+        var s = JSON.parse(localStorage.getItem('foyer_users') || 'null');
+        if (Array.isArray(s)) {
+          users = s;
+        }
+      } catch (e) {
+        // keep seeded users
+      }
+    }
+
+    function saveUsers() {
+      try { localStorage.setItem('foyer_users', JSON.stringify(users)); } catch (e) {}
+    }
+
     // Profiles and pagination
     var profiles = ['Dono','Diretor','Gerente','Capitão','Corretor','RH','Marketing','Limpeza','Atendimento','Comercial'];
     var currentPage = 1;
@@ -2562,6 +2602,7 @@
             if ((currentPage - 1) * pageSize >= users.length && currentPage > 1) {
               currentPage--;
             }
+            saveUsers();
             updateUserCards();
             saveUIState();
           }
@@ -2666,6 +2707,7 @@
       if (!/^\S+@\S+\.\S+$/.test(email.trim())) { alert('E-mail inválido.'); return; }
       var pending = { name: '', email: email.trim(), phone: '', profile: 'Colaborador', status: 'Pendente', unit: '', team: '', initials: normalizeInitials(email.trim()) };
       users.unshift(pending);
+      saveUsers();
       saveUIState();
       updateUserCards();
       alert('Convite simulado: usuário adicionado como pendente.');
@@ -2689,6 +2731,11 @@
     function formatCurrency(v) { return 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
     function createSaleCard(sale, idx) {
+      var commissionR = '';
+      if (sale.commission) {
+        var c = parseFloat(sale.commission) || 0;
+        commissionR = formatCurrency((parseFloat(sale.value)||0) * (c/100));
+      }
       return `
         <article class="user-card" data-sale-idx="${idx}">
           <header>
@@ -2700,7 +2747,7 @@
           </header>
           <div class="user-detail-grid">
             <div class="user-detail-block"><span>Data</span><strong>${sale.date || '—'}</strong></div>
-            <div class="user-detail-block"><span>Comissão</span><strong>${sale.commission ? sale.commission + '%' : '—'}</strong></div>
+            <div class="user-detail-block"><span>Comissão</span><strong>${sale.commission ? sale.commission + '% · ' + commissionR : '—'}</strong></div>
           </div>
           <div style="margin-top:8px;text-align:right">
             <button class="btn-secondary btn-edit-sale" data-idx="${idx}">Editar</button>
@@ -2711,23 +2758,67 @@
     }
 
     function renderSalesList() {
-      var container = document.getElementById('sales-list');
+      var container = document.getElementById('sales-list-container');
       if (!container) return;
-      if (!sales.length) {
+      // apply filters
+      var filtered = applySaleFilters();
+      var total = Math.max(1, Math.ceil(filtered.length / salesPageSize));
+      if (salesCurrentPage > total) salesCurrentPage = total;
+      if (salesCurrentPage < 1) salesCurrentPage = 1;
+      var start = (salesCurrentPage - 1) * salesPageSize;
+      var end = start + salesPageSize;
+      var pageSales = filtered.slice(start, end);
+
+      if (!pageSales.length) {
         container.innerHTML = '<div class="metric-detail">Nenhuma venda registrada.</div>';
-        return;
+      } else {
+        container.innerHTML = pageSales.map(function(s,i){ return createSaleCard(s, start + i); }).join('');
       }
-      container.innerHTML = sales.map(function(s,i){ return createSaleCard(s,i); }).join('');
+
+      // update pager
+      var curEl = document.getElementById('sale-page-current');
+      var totEl = document.getElementById('sale-page-total');
+      if (curEl) curEl.textContent = salesCurrentPage;
+      if (totEl) totEl.textContent = total;
 
       // attach handlers
       document.querySelectorAll('.btn-edit-sale').forEach(function(btn){ btn.addEventListener('click', function(){ openSaleModal(parseInt(btn.dataset.idx,10)); }); });
       document.querySelectorAll('.btn-delete-sale').forEach(function(btn){ btn.addEventListener('click', function(){ var i = parseInt(btn.dataset.idx,10); if (confirm('Excluir venda?')) { sales.splice(i,1); saveSales(); renderSalesList(); } }); });
+
+      // wire pager controls
+      var prev = document.getElementById('sale-page-prev');
+      var next = document.getElementById('sale-page-next');
+      var size = document.getElementById('sale-page-size');
+      var search = document.getElementById('sale-search');
+      var filterStatus = document.getElementById('sale-filter-status');
+      if (prev) prev.onclick = function(){ if (salesCurrentPage>1) { salesCurrentPage--; renderSalesList(); } };
+      if (next) next.onclick = function(){ var total = Math.max(1, Math.ceil(applySaleFilters().length / salesPageSize)); if (salesCurrentPage<total) { salesCurrentPage++; renderSalesList(); } };
+      if (size) size.onchange = function(){ salesPageSize = parseInt(this.value,10)||5; salesCurrentPage=1; renderSalesList(); };
+      if (search) search.oninput = function(){ salesCurrentPage=1; renderSalesList(); };
+      if (filterStatus) filterStatus.onchange = function(){ salesCurrentPage=1; renderSalesList(); };
     }
 
     function populateSellerOptions() {
       var sel = document.getElementById('sale-seller');
       if (!sel) return;
       sel.innerHTML = '<option value="">Selecione corretor...</option>' + users.map(function(u){ return '<option>'+ (u.name || u.email || '—') +'</option>'; }).join('');
+    }
+
+    // Sales filtering & pagination state
+    var salesCurrentPage = 1;
+    var salesPageSize = 5;
+
+    function applySaleFilters() {
+      var q = (document.getElementById('sale-search') ? document.getElementById('sale-search').value.trim().toLowerCase() : '');
+      var st = (document.getElementById('sale-filter-status') ? document.getElementById('sale-filter-status').value : 'Todos os status');
+      return sales.filter(function(s) {
+        if (st && st !== 'Todos os status' && (s.status || '') !== st) return false;
+        if (q) {
+          var hay = ((s.buyer||'') + ' ' + (s.seller||'') + ' ' + (s.date||'')).toLowerCase();
+          if (hay.indexOf(q) === -1) return false;
+        }
+        return true;
+      });
     }
 
     function resetSaleForm() {
@@ -2772,11 +2863,16 @@
       var sale = {
         buyer: document.getElementById('sale-buyer').value.trim(),
         seller: document.getElementById('sale-seller').value || '',
-        value: parseFloat(document.getElementById('sale-value').value) || 0,
+        value: parseFloat(String(document.getElementById('sale-value').value).replace(',','.')) || 0,
         date: document.getElementById('sale-date').value || '',
         status: document.getElementById('sale-status').value || 'Concluída',
         commission: document.getElementById('sale-commission').value || ''
       };
+      // calculate commission in R$
+      if (sale.commission) {
+        var pc = parseFloat(String(sale.commission).replace(',','.')) || 0;
+        sale.commissionValue = (sale.value || 0) * (pc/100);
+      }
       if (!sale.buyer || !sale.value) { alert('Preencha comprador e valor.'); return; }
       if (editSaleIndex !== null && typeof editSaleIndex !== 'undefined') {
         sales[editSaleIndex] = sale;
@@ -2862,7 +2958,9 @@
             if ((currentPage - 1) * pageSize >= users.length && currentPage > 1) {
               currentPage--;
             }
+            saveUsers();
             updateUserCards();
+            saveUIState();
           }
         });
       });
@@ -2960,6 +3058,7 @@
       }
 
       editIndex = null;
+      saveUsers();
       updateUserCards();
       saveUIState();
       closeUserModal();
@@ -2998,7 +3097,8 @@
       }
     }
 
-    // Initialize dynamic profile options and restore UI state
+    // Initialize users, dynamic profile options and restore UI state
+    loadUsers();
     populateProfileOptions();
     loadUIState();
 
