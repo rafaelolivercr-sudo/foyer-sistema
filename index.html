@@ -2162,6 +2162,92 @@
     </div>
   </div>
 
+  <div id="profile-modal-backdrop" class="modal-backdrop hidden" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
+      <header>
+        <div>
+          <h3 id="profile-modal-title">Perfil do Usuário</h3>
+          <p>Visualize os detalhes completos deste usuário.</p>
+        </div>
+        <button id="close-profile-modal" class="modal-close" type="button" aria-label="Fechar modal"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+
+      <div id="profile-content" class="form-grid">
+        <div class="form-section">
+          <h4>Dados pessoais</h4>
+          <div class="form-row full">
+            <div class="form-field">
+              <label>Nome completo</label>
+              <div id="p-name" class="user-detail-block"><strong>—</strong></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>E-mail</label>
+              <div id="p-email" class="user-detail-block"><strong>—</strong></div>
+            </div>
+            <div class="form-field">
+              <label>Telefone / WhatsApp</label>
+              <div id="p-phone" class="user-detail-block"><strong>—</strong></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Perfil de acesso</label>
+              <div id="p-profile" class="user-detail-block"><strong>—</strong></div>
+            </div>
+            <div class="form-field">
+              <label>Status</label>
+              <div id="p-status" class="user-detail-block"><strong>—</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Dados bancários</h4>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Banco</label>
+              <div id="p-bank" class="user-detail-block"><strong>—</strong></div>
+            </div>
+            <div class="form-field">
+              <label>Agência</label>
+              <div id="p-agency" class="user-detail-block"><strong>—</strong></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Conta</label>
+              <div id="p-account" class="user-detail-block"><strong>—</strong></div>
+            </div>
+            <div class="form-field">
+              <label>Tipo de conta</label>
+              <div id="p-account-type" class="user-detail-block"><strong>—</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Chave Pix</h4>
+          <div class="form-row full">
+            <div class="form-field">
+              <label>Tipo</label>
+              <div id="p-pix-type" class="user-detail-block"><strong>—</strong></div>
+            </div>
+            <div class="form-field">
+              <label>Chave</label>
+              <div id="p-pix-key" class="user-detail-block"><strong>—</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="close-profile-btn">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     function setAuthState(isAuthed) {
       if (isAuthed) {
@@ -2413,7 +2499,7 @@
       document.querySelectorAll('.btn-toggle').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var idx = parseInt(btn.dataset.idx, 10);
-          alert('Abrir visualização de perfil para: ' + users[idx].name);
+          openProfileModal(idx);
         });
       });
     }
@@ -2460,6 +2546,34 @@
       });
       openUserModal();
     }
+
+    function openProfileModal(idx) {
+      var user = users[idx];
+      if (!user) return;
+      document.getElementById('p-name').querySelector('strong').textContent = user.name || '—';
+      document.getElementById('p-email').querySelector('strong').textContent = user.email || '—';
+      document.getElementById('p-phone').querySelector('strong').textContent = user.phone || '—';
+      document.getElementById('p-profile').querySelector('strong').textContent = user.profile || '—';
+      document.getElementById('p-status').querySelector('strong').textContent = user.status || '—';
+      document.getElementById('p-bank').querySelector('strong').textContent = user.bank || '—';
+      document.getElementById('p-agency').querySelector('strong').textContent = user.agency || '—';
+      document.getElementById('p-account').querySelector('strong').textContent = user.account || '—';
+      document.getElementById('p-account-type').querySelector('strong').textContent = user.accountType || '—';
+      document.getElementById('p-pix-type').querySelector('strong').textContent = user.pixType || '—';
+      document.getElementById('p-pix-key').querySelector('strong').textContent = user.pixKey || '—';
+
+      document.getElementById('profile-modal-backdrop').classList.remove('hidden');
+      document.getElementById('profile-modal-backdrop').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profile-modal-backdrop').classList.add('hidden');
+      document.getElementById('profile-modal-backdrop').setAttribute('aria-hidden', 'true');
+    }
+
+    document.getElementById('close-profile-modal').addEventListener('click', closeProfileModal);
+    document.getElementById('close-profile-btn').addEventListener('click', closeProfileModal);
+    document.getElementById('profile-modal-backdrop').addEventListener('click', function(e) { if (e.target === this) closeProfileModal(); });
 
     function normalizeInitials(name) {
       return name.split(' ').filter(Boolean).map(function(part) { return part[0]; }).slice(0,2).join('').toUpperCase();
